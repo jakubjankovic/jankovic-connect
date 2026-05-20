@@ -48,37 +48,37 @@ export default function HomeScreen({navigation}: Props) {
 
       <Card>
         <ActionButton
-          label="Save Contact"
-          subtitle="Ulož môj kontakt (vCard)"
+          label="Uložiť kontakt"
+          subtitle="Ulož si môj kontakt"
           icon="👤"
           chevron
           onPress={saveContact}
         />
         <ActionButton
-          label="Connect on LinkedIn"
+          label="LinkedIn"
           subtitle="Spojme sa profesionálne"
           icon="in"
           chevron
           onPress={openLinkedIn}
         />
         <ActionButton
-          label="Send Email"
-          subtitle="Napíš mi e-mail"
+          label="Napísať e-mail"
+          subtitle="Otvorí poštovú aplikáciu"
           icon="✉️"
           chevron
           onPress={openEmail}
         />
         <ActionButton
-          label="Copy Email"
+          label="Kopírovať e-mail"
           subtitle={PROFILE.email}
           icon="📋"
           chevron
           onPress={handleCopyEmail}
           success={emailCopied}
-          successLabel="Email skopírovaný ✓"
+          successLabel="E-mail skopírovaný ✓"
         />
         <ActionButton
-          label="Call"
+          label="Zavolať"
           subtitle={PROFILE.phone}
           icon="📞"
           chevron
@@ -92,8 +92,8 @@ export default function HomeScreen({navigation}: Props) {
           onPress={openFacebook}
         />
         <ActionButton
-          label="Book a Meeting"
-          subtitle="Dostupnosť cez Google Calendar"
+          label="Rezervovať termín"
+          subtitle="Naživo cez Google Calendar"
           icon="📅"
           variant="cta"
           chevron
@@ -103,29 +103,29 @@ export default function HomeScreen({navigation}: Props) {
       </Card>
 
       <View style={styles.chipRow}>
-        <TrustChip title="NFC" sub="Tap to connect" />
-        <TrustChip title="REAL-TIME" sub="Google Calendar" />
-        <TrustChip title="SECURE" sub="Privacy first" />
+        <TrustChip title="NFC" sub="Priložením" />
+        <TrustChip title="NAŽIVO" sub="Google Calendar" />
+        <TrustChip title="SÚKROMIE" sub="Dáta v bezpečí" />
       </View>
 
       <Card>
-        <SectionTitle title="Networking Tools" subtitle="Zdieľaj a zapisuj" />
+        <SectionTitle title="Nástroje na networking" subtitle="Zdieľaj a zapisuj" />
         <ActionButton
-          label="Share My Card"
+          label="Zdieľať vizitku"
           subtitle="QR kód pre tvoju vizitku"
           icon="🔳"
           chevron
           onPress={() => navigation.navigate('ShareCard')}
         />
         <ActionButton
-          label="NFC Setup"
-          subtitle="Zapíš link na kartu/tag"
+          label="Nastavenie NFC"
+          subtitle="Zapíš odkaz na kartu/tag"
           icon="📶"
           chevron
           onPress={() => navigation.navigate('NfcSetup')}
         />
         <ActionButton
-          label="Follow-up Helper"
+          label="Správa po stretnutí"
           subtitle="Vygeneruj správu po stretnutí"
           icon="✍️"
           chevron

@@ -46,17 +46,17 @@ export default function App() {
           <Stack.Screen
             name="ShareCard"
             component={ShareCardScreen}
-            options={{title: 'Share My Card'}}
+            options={{title: 'Zdieľať vizitku'}}
           />
           <Stack.Screen
             name="NfcSetup"
             component={NfcSetupScreen}
-            options={{title: 'NFC Setup'}}
+            options={{title: 'Nastavenie NFC'}}
           />
           <Stack.Screen
             name="FollowUpHelper"
             component={FollowUpHelperScreen}
-            options={{title: 'Follow-up Helper'}}
+            options={{title: 'Správa po stretnutí'}}
           />
         </Stack.Navigator>
       </NavigationContainer>

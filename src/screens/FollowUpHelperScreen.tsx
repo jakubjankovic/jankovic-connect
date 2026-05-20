@@ -64,7 +64,7 @@ export default function FollowUpHelperScreen() {
         showsVerticalScrollIndicator={false}>
         <Card>
           <SectionTitle
-            title="Follow-up Helper"
+            title="Správa po stretnutí"
             subtitle="Vygeneruj profesionálnu správu"
           />
           {FIELDS.map(field => (
@@ -83,7 +83,7 @@ export default function FollowUpHelperScreen() {
             </View>
           ))}
           <ActionButton
-            label="Generate Follow-up Message"
+            label="Vygenerovať správu"
             icon="✨"
             variant="primary"
             onPress={handleGenerate}
@@ -97,7 +97,7 @@ export default function FollowUpHelperScreen() {
               <Text style={styles.outputText}>{message}</Text>
             </View>
             <ActionButton
-              label="Copy Message"
+              label="Kopírovať správu"
               icon="📋"
               onPress={handleCopy}
               success={copied}

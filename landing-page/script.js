@@ -12,7 +12,7 @@ var PROFILE = {
   email: 'jakubjankovic100@gmail.com',
   linkedin: 'https://www.linkedin.com/in/jakub-benjamin-jankovi%C4%8D-b7929320b/',
   facebook: 'https://www.facebook.com/profile.php?id=100022833794468',
-  title: 'Banking • Networking • Client Relationships',
+  title: 'Bankovníctvo • Networking • Vzťahy s klientmi',
 };
 
 // Public landing-page URL (what the QR / NFC tag / vCard website point to).

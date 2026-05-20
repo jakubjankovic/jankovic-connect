@@ -28,7 +28,7 @@ const STATUS: Record<
   },
   unsupported: {
     label: 'NFC nie je dostupné',
-    detail: 'Toto zariadenie nepodporuje NFC. Použi QR kód ako záłohu.',
+    detail: 'Toto zariadenie nepodporuje NFC. Použi QR kód ako zálohu.',
     tone: 'bad',
   },
   disabled: {
@@ -117,7 +117,7 @@ export default function NfcSetupScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}>
       <Card>
-        <SectionTitle title="NFC Setup" subtitle="Zapíš link na kartu/tag" />
+        <SectionTitle title="Nastavenie NFC" subtitle="Zapíš odkaz na kartu/tag" />
         <View style={[styles.statusBox, {borderColor: toneColor}]}>
           <View style={[styles.dot, {backgroundColor: toneColor}]} />
           <View style={styles.flex}>
@@ -133,7 +133,7 @@ export default function NfcSetupScreen() {
           state === 'success' ||
           state === 'failed') && (
           <ActionButton
-            label="Write URL to NFC Tag"
+            label="Zapísať odkaz na NFC"
             icon="📶"
             variant="primary"
             loading={state === 'writing'}
@@ -153,7 +153,7 @@ export default function NfcSetupScreen() {
         <SectionTitle title="Ako to funguje" />
         <Text style={styles.explain}>{TEXTS.nfcExplain}</Text>
         <View style={styles.urlBox}>
-          <Text style={styles.urlLabel}>Zapisovaný link</Text>
+          <Text style={styles.urlLabel}>Zapisovaný odkaz</Text>
           <Text style={styles.url}>{PUBLIC_CARD_URL}</Text>
         </View>
         <Text style={styles.note}>{TEXTS.nfcBackup}</Text>

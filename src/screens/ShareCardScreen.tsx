@@ -44,21 +44,21 @@ export default function ShareCardScreen() {
 
       <Card>
         <ActionButton
-          label="Copy Link"
+          label="Kopírovať odkaz"
           icon="🔗"
           variant="primary"
           onPress={handleCopyLink}
           success={linkCopied}
-          successLabel="Link skopírovaný ✓"
+          successLabel="Odkaz skopírovaný ✓"
         />
-        <ActionButton label="Save Contact" icon="👤" onPress={saveContact} />
+        <ActionButton label="Uložiť kontakt" icon="👤" onPress={saveContact} />
         <ActionButton
-          label="Connect on LinkedIn"
+          label="LinkedIn"
           icon="in"
           onPress={openLinkedIn}
         />
         <ActionButton
-          label="Book a Meeting"
+          label="Rezervovať termín"
           icon="📅"
           onPress={openBooking}
         />

@@ -16,7 +16,7 @@ export const BOOKING_LINK = 'https://calendar.app.google/hirwrfbkkEG6uXE16';
 export const PROFILE = {
   fullName: 'Jakub Benjamin Jankovič',
   shortName: 'JBJ Connect',
-  headline: 'Banking • Networking • Client Relationships',
+  headline: 'Bankovníctvo • Networking • Vzťahy s klientmi',
   phone: '+421 903 703 725',
   phoneDial: '+421903703725',
   email: 'jakubjankovic100@gmail.com',
@@ -35,7 +35,7 @@ export const TEXTS = {
     'Toto je osobná digitálna vizitka. Nejde o oficiálnu stránku banky ani o individuálne finančné poradenstvo.',
   shareHelper:
     'Naskenuj QR kód alebo použi NFC kartu/tag a otvorí sa ti moja digitálna vizitka.',
-  scanOrTap: 'Scan or tap NFC to connect',
+  scanOrTap: 'Naskenuj alebo prilož NFC',
   nfcExplain:
     'NFC funguje cez kartu, tag alebo nálepku, na ktorú je zapísaný verejný link tejto digitálnej vizitky. Po priložení mobilu sa otvorí kontaktová stránka.',
   nfcBackup: 'QR kód je vždy dostupný ako záloha.',
@@ -43,5 +43,5 @@ export const TEXTS = {
   bookingHelper: 'Dostupnosť je synchronizovaná cez Google Calendar.',
   bookingCombined:
     'Vyber si voľný termín priamo v mojom kalendári. Dostupnosť je synchronizovaná cez Google Calendar.',
-  footer: 'Tap. Connect. Follow up.',
+  footer: 'Prilož. Spoj sa. Ozvi sa.',
 };
