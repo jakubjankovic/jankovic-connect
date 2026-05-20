@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer ring -->
+    <path
+        android:strokeColor="#b88a3e"
+        android:strokeWidth="4"
+        android:fillColor="#00000000"
+        android:pathData="M54,30 m-21,0 a21,21 0 1,0 42,0 a21,21 0 1,0 -42,0" />
+    <!-- Connection node (champagne accent) -->
+    <path
+        android:fillColor="#f0d9a8"
+        android:pathData="M54,49 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0" />
+    <!-- Stylised J stem (gold) -->
+    <path
+        android:fillColor="#d4ad5d"
+        android:pathData="M58,30 L58,72 Q58,82 48,82 Q40,82 38,74 L44,72 Q45,76 48,76 Q52,76 52,71 L52,30 Z" />
+</vector>

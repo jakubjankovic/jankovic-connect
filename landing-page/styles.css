@@ -1,0 +1,372 @@
+/* Jakub Benjamin Jankovič — Digital Contact Hub
+ * Premium "Kubo Smart Contact" luxury identity: gold on warm near-black.
+ * Crisp + sharp. No fake booking data — Book a Meeting opens the real
+ * Google Calendar link.
+ */
+
+:root {
+  --bg-0: #0a0908;
+  --bg-1: #0f0d0b;
+  --ink-0: #f5efe0;
+  --ink-1: #d4cdbb;
+  --ink-2: #97907c;
+  --ink-3: #5b5443;
+  --line: rgba(212, 173, 93, 0.22);
+  --line-soft: rgba(245, 239, 224, 0.08);
+  --gold-1: #d4ad5d;
+  --gold-2: #e8c989;
+  --gold-3: #b88a3e;
+  --champagne: #f3dca8;
+  --card: #16120d;
+  --gold-grad: linear-gradient(135deg, #b88a3e 0%, #e8c989 38%, #d4ad5d 62%, #f0d9a8 82%, #b88a3e 100%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background: #050403;
+}
+
+body {
+  color: var(--ink-0);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  padding: 26px 16px 40px;
+  position: relative;
+}
+
+/* Subtle warm vignette only (no grain — keeps edges crisp) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(820px 540px at 14% 4%, rgba(212, 173, 93, 0.1), transparent 60%),
+    radial-gradient(760px 560px at 86% 98%, rgba(184, 138, 62, 0.07), transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.display {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ---- Card shell ---- */
+.shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow:
+    0 1px 0 rgba(245, 239, 224, 0.05) inset,
+    0 40px 80px -32px rgba(0, 0, 0, 0.85);
+  padding-bottom: 8px;
+  overflow: hidden;
+}
+
+/* ---- Header / avatar ---- */
+.header {
+  text-align: center;
+  padding: 34px 24px 0;
+}
+
+.avatar {
+  width: 148px;
+  height: 148px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--gold-1);
+  background: #0d0a07;
+  box-shadow:
+    0 0 0 6px rgba(212, 173, 93, 0.08),
+    0 18px 40px -14px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 14%;
+  display: block;
+}
+
+.name {
+  font-size: 31px;
+  line-height: 1.1;
+  color: var(--champagne);
+}
+
+.role {
+  font-size: 13px;
+  color: var(--ink-1);
+  margin-top: 8px;
+  letter-spacing: 0.2px;
+}
+
+.org {
+  font-size: 10.5px;
+  color: var(--gold-1);
+  margin-top: 5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.intro {
+  text-align: center;
+  color: var(--ink-1);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 16px 28px 0;
+}
+
+/* ---- Action list ---- */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 18px 6px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(245, 239, 224, 0.035);
+  border: 1px solid rgba(232, 201, 137, 0.16);
+  color: var(--ink-0);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 110ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.action-btn:hover {
+  border-color: rgba(232, 201, 137, 0.42);
+  background: rgba(232, 201, 137, 0.07);
+  transform: translateY(-1px);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+.action-btn .ic {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(232, 201, 137, 0.14);
+  border: 1px solid rgba(232, 201, 137, 0.34);
+  color: var(--champagne);
+  flex: 0 0 auto;
+}
+
+.action-btn .ic svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* min-width:0 lets the text column shrink so ellipsis works */
+.action-btn .label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.action-btn .t1 {
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-btn .t2 {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-btn .chev {
+  color: var(--ink-3);
+  flex: 0 0 auto;
+}
+
+/* Gold CTA */
+.action-btn.cta {
+  background: var(--gold-grad);
+  color: #1a140a;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 26px -10px rgba(212, 173, 93, 0.5);
+}
+
+.action-btn.cta .ic {
+  background: rgba(0, 0, 0, 0.22);
+  border-color: rgba(0, 0, 0, 0.3);
+  color: #1a140a;
+}
+
+.action-btn.cta .t1 {
+  font-weight: 700;
+}
+
+.action-btn.cta .t2 {
+  color: rgba(26, 20, 10, 0.72);
+}
+
+.action-btn.cta .chev {
+  color: rgba(26, 20, 10, 0.6);
+}
+
+.action-btn.is-success {
+  border-color: rgba(111, 212, 154, 0.55);
+  background: rgba(111, 212, 154, 0.08);
+}
+
+/* ---- Tagline / trust / footer ---- */
+.tagline {
+  text-align: center;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink-2);
+  font-size: 16px;
+  padding: 18px 24px 2px;
+}
+
+.hairline {
+  height: 1px;
+  margin: 18px 24px 0;
+  background: linear-gradient(90deg, transparent, var(--line) 35%, var(--line) 65%, transparent);
+}
+
+.trust {
+  text-align: center;
+  color: var(--ink-2);
+  font-size: 11.5px;
+  line-height: 1.55;
+  padding: 16px 26px 0;
+}
+
+.footer {
+  text-align: center;
+  color: var(--champagne);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  padding: 16px 24px 24px;
+}
+
+/* ---- QR ---- */
+.qr-card {
+  text-align: center;
+  padding: 20px 24px 4px;
+}
+
+.qr-frame {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  background: #fffdf6;
+  border-radius: 16px;
+  border: 2px solid var(--gold-1);
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.7);
+  display: grid;
+  place-items: center;
+  padding: 12px;
+}
+
+.qr-frame img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+
+.qr-title {
+  color: var(--champagne);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-top: 14px;
+}
+
+.qr-sub {
+  color: var(--ink-3);
+  font-size: 10.5px;
+  margin-top: 4px;
+  word-break: break-all;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ---- Toast ---- */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-14px);
+  background: #16120d;
+  border: 1px solid rgba(232, 201, 137, 0.4);
+  color: var(--ink-0);
+  padding: 12px 18px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast .tic {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--gold-grad);
+  color: #1a140a;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 380px) {
+  .name {
+    font-size: 27px;
+  }
+  .avatar {
+    width: 128px;
+    height: 128px;
+  }
+}
