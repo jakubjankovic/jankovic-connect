@@ -36,13 +36,10 @@ function toast(message) {
   }, 2000);
 }
 
-function flashSub(btn, subEl, label) {
-  var original = subEl.textContent;
+function flashSuccess(btn) {
   btn.classList.add('is-success');
-  subEl.textContent = label;
   setTimeout(function () {
     btn.classList.remove('is-success');
-    subEl.textContent = original;
   }, 2000);
 }
 
@@ -115,14 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
   $('copyEmail').addEventListener('click', function () {
     var btn = this;
     copyText(PROFILE.email).then(function () {
-      flashSub(btn, $('copyEmailSub'), 'Email skopírovaný ✓');
-      toast('Email skopírovaný');
+      flashSuccess(btn);
+      toast('E-mail skopírovaný');
     });
   });
-
-  // Show the URL the QR encodes (helpful for verification)
-  var qrUrlEl = $('qrUrl');
-  if (qrUrlEl) {
-    qrUrlEl.textContent = PUBLIC_CARD_URL;
-  }
 });

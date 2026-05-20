@@ -34,14 +34,14 @@ export const TEXTS = {
   disclaimer:
     'Toto je osobná digitálna vizitka. Nejde o oficiálnu stránku banky ani o individuálne finančné poradenstvo.',
   shareHelper:
-    'Naskenuj QR kód alebo použi NFC kartu/tag a otvorí sa ti moja digitálna vizitka.',
-  scanOrTap: 'Naskenuj alebo prilož NFC',
+    'Naskenujte QR kód alebo použite NFC kartu/tag a otvorí sa vám moja digitálna vizitka.',
+  scanOrTap: 'Naskenujte alebo priložte NFC',
   nfcExplain:
     'NFC funguje cez kartu, tag alebo nálepku, na ktorú je zapísaný verejný link tejto digitálnej vizitky. Po priložení mobilu sa otvorí kontaktová stránka.',
   nfcBackup: 'QR kód je vždy dostupný ako záloha.',
-  bookingText: 'Vyber si voľný termín priamo v mojom kalendári.',
+  bookingText: 'Vyberte si voľný termín priamo v mojom kalendári.',
   bookingHelper: 'Dostupnosť je synchronizovaná cez Google Calendar.',
   bookingCombined:
-    'Vyber si voľný termín priamo v mojom kalendári. Dostupnosť je synchronizovaná cez Google Calendar.',
-  footer: 'Prilož. Spoj sa. Ozvi sa.',
+    'Vyberte si voľný termín priamo v mojom kalendári. Dostupnosť je synchronizovaná cez Google Calendar.',
+  footer: 'Prajem Vám veľa úspechov',
 };

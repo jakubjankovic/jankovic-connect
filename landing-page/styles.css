@@ -195,10 +195,8 @@ body::before {
 
 .action-btn .t1 {
   font-weight: 600;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 15px;
+  line-height: 1.25;
 }
 
 .action-btn .t2 {
@@ -273,11 +271,12 @@ body::before {
 .footer {
   text-align: center;
   color: var(--champagne);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  padding: 16px 24px 24px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 16px 24px 26px;
 }
 
 /* ---- QR ---- */
@@ -286,10 +285,54 @@ body::before {
   padding: 20px 24px 4px;
 }
 
+/* Rotating gold beam circling the QR perimeter */
+.qr-orbit {
+  position: relative;
+  width: 226px;
+  height: 226px;
+  margin: 0 auto;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.qr-orbit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    rgba(232, 201, 137, 0) 0deg,
+    rgba(232, 201, 137, 0) 264deg,
+    var(--gold-3) 300deg,
+    var(--gold-2) 324deg,
+    var(--champagne) 340deg,
+    var(--gold-2) 350deg,
+    rgba(232, 201, 137, 0) 360deg
+  );
+  animation: qr-orbit-spin 3.6s linear infinite;
+  z-index: 0;
+}
+
+@keyframes qr-orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qr-orbit::before {
+    animation: none;
+  }
+}
+
 .qr-frame {
+  position: relative;
+  z-index: 1;
   width: 200px;
   height: 200px;
-  margin: 0 auto;
   background: #fffdf6;
   border-radius: 16px;
   border: 2px solid var(--gold-1);

@@ -49,7 +49,7 @@ export default function HomeScreen({navigation}: Props) {
       <Card>
         <ActionButton
           label="Uložiť kontakt"
-          subtitle="Ulož si môj kontakt"
+          subtitle="Uložte si môj kontakt"
           icon="👤"
           chevron
           onPress={saveContact}
@@ -86,7 +86,7 @@ export default function HomeScreen({navigation}: Props) {
         />
         <ActionButton
           label="Facebook"
-          subtitle="Spoj sa na Facebooku"
+          subtitle="Spojte sa na Facebooku"
           icon="f"
           chevron
           onPress={openFacebook}
@@ -112,21 +112,21 @@ export default function HomeScreen({navigation}: Props) {
         <SectionTitle title="Nástroje na networking" subtitle="Zdieľaj a zapisuj" />
         <ActionButton
           label="Zdieľať vizitku"
-          subtitle="QR kód pre tvoju vizitku"
+          subtitle="QR kód na vašu vizitku"
           icon="🔳"
           chevron
           onPress={() => navigation.navigate('ShareCard')}
         />
         <ActionButton
           label="Nastavenie NFC"
-          subtitle="Zapíš odkaz na kartu/tag"
+          subtitle="Zapíšte odkaz na kartu/tag"
           icon="📶"
           chevron
           onPress={() => navigation.navigate('NfcSetup')}
         />
         <ActionButton
           label="Správa po stretnutí"
-          subtitle="Vygeneruj správu po stretnutí"
+          subtitle="Vygenerujte správu po stretnutí"
           icon="✍️"
           chevron
           onPress={() => navigation.navigate('FollowUpHelper')}

@@ -28,32 +28,32 @@ const STATUS: Record<
   },
   unsupported: {
     label: 'NFC nie je dostupné',
-    detail: 'Toto zariadenie nepodporuje NFC. Použi QR kód ako zálohu.',
+    detail: 'Toto zariadenie nepodporuje NFC. Použite QR kód ako zálohu.',
     tone: 'bad',
   },
   disabled: {
     label: 'NFC je vypnuté',
-    detail: 'Zapni NFC v nastaveniach Androidu a vráť sa späť.',
+    detail: 'Zapnite NFC v nastaveniach Androidu a vráťte sa späť.',
     tone: 'warn',
   },
   ready: {
     label: 'Pripravené na zápis',
-    detail: 'Stlač tlačidlo nižšie a prilož NFC kartu/tag/nálepku.',
+    detail: 'Stlačte tlačidlo nižšie a priložte NFC kartu/tag/nálepku.',
     tone: 'good',
   },
   writing: {
-    label: 'Prilož NFC tag…',
-    detail: 'Drž tag pri zadnej časti telefónu, kým neprebehne zápis.',
+    label: 'Priložte NFC tag…',
+    detail: 'Držte tag pri zadnej časti telefónu, kým neprebehne zápis.',
     tone: 'neutral',
   },
   success: {
     label: 'Zápis úspešný ✓',
-    detail: 'Na tag bol zapísaný verejný link tvojej digitálnej vizitky.',
+    detail: 'Na tag bol zapísaný verejný odkaz vašej digitálnej vizitky.',
     tone: 'good',
   },
   failed: {
     label: 'Zápis zlyhal',
-    detail: 'Skús to znova a prilož tag bližšie k telefónu.',
+    detail: 'Skúste to znova a priložte tag bližšie k telefónu.',
     tone: 'bad',
   },
 };
@@ -117,7 +117,7 @@ export default function NfcSetupScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}>
       <Card>
-        <SectionTitle title="Nastavenie NFC" subtitle="Zapíš odkaz na kartu/tag" />
+        <SectionTitle title="Nastavenie NFC" subtitle="Zapíšte odkaz na kartu/tag" />
         <View style={[styles.statusBox, {borderColor: toneColor}]}>
           <View style={[styles.dot, {backgroundColor: toneColor}]} />
           <View style={styles.flex}>

@@ -65,7 +65,7 @@ export default function FollowUpHelperScreen() {
         <Card>
           <SectionTitle
             title="Správa po stretnutí"
-            subtitle="Vygeneruj profesionálnu správu"
+            subtitle="Vygenerujte profesionálnu správu"
           />
           {FIELDS.map(field => (
             <View key={field.key} style={styles.fieldWrap}>
