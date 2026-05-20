@@ -285,46 +285,53 @@ body::before {
   padding: 20px 24px 4px;
 }
 
-/* Rotating gold beam circling the QR perimeter */
+/* A gold stripe that travels along the QR frame perimeter */
 .qr-orbit {
   position: relative;
-  width: 226px;
-  height: 226px;
+  width: 224px;
+  height: 224px;
   margin: 0 auto;
-  border-radius: 22px;
   display: grid;
   place-items: center;
-  isolation: isolate;
 }
 
-.qr-orbit::before {
-  content: '';
+.qr-runner {
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: conic-gradient(
-    from 0deg,
-    rgba(232, 201, 137, 0) 0deg,
-    rgba(232, 201, 137, 0) 264deg,
-    var(--gold-3) 300deg,
-    var(--gold-2) 324deg,
-    var(--champagne) 340deg,
-    var(--gold-2) 350deg,
-    rgba(232, 201, 137, 0) 360deg
+  top: 0;
+  left: 0;
+  width: 54px;
+  height: 5px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(232, 201, 137, 0) 0%,
+    var(--gold-2) 32%,
+    var(--champagne) 50%,
+    var(--gold-2) 68%,
+    rgba(232, 201, 137, 0) 100%
   );
-  animation: qr-orbit-spin 3.6s linear infinite;
-  z-index: 0;
+  box-shadow: 0 0 10px 1px rgba(240, 217, 168, 0.8);
+  /* Travels along the rounded-rect path that sits on the frame border */
+  offset-path: path(
+    'M 28 12 H 196 A 16 16 0 0 1 212 28 V 196 A 16 16 0 0 1 196 212 H 28 A 16 16 0 0 1 12 196 V 28 A 16 16 0 0 1 28 12 Z'
+  );
+  offset-rotate: auto;
+  offset-distance: 0%;
+  animation: qr-run 3.4s linear infinite;
+  z-index: 2;
+  pointer-events: none;
 }
 
-@keyframes qr-orbit-spin {
+@keyframes qr-run {
   to {
-    transform: rotate(360deg);
+    offset-distance: 100%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .qr-orbit::before {
+  .qr-runner {
     animation: none;
+    opacity: 0;
   }
 }
 
@@ -335,7 +342,7 @@ body::before {
   height: 200px;
   background: #fffdf6;
   border-radius: 16px;
-  border: 2px solid var(--gold-1);
+  border: 4px solid var(--gold-1);
   box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.7);
   display: grid;
   place-items: center;
