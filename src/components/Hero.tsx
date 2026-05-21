@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {colors, displayFont, font, radius, spacing} from '../constants/theme';
 import {PROFILE} from '../constants/profile';
 
@@ -10,8 +10,11 @@ interface Props {
 export default function Hero({intro}: Props) {
   return (
     <View style={styles.wrap}>
-      <View style={styles.monogram}>
-        <Text style={styles.monogramText}>JBJ</Text>
+      <View style={styles.avatar}>
+        <Image
+          source={require('../assets/portrait.png')}
+          style={styles.avatarImg}
+        />
       </View>
       <Text style={styles.name}>{PROFILE.fullName}</Text>
       <View style={styles.headlinePill}>
@@ -22,34 +25,37 @@ export default function Hero({intro}: Props) {
   );
 }
 
+const AVATAR = 150;
+
 const styles = StyleSheet.create({
   wrap: {
     alignItems: 'center',
     paddingTop: spacing.lg,
     paddingBottom: spacing.lg,
   },
-  monogram: {
-    width: 116,
-    height: 116,
-    borderRadius: radius.pill,
+  avatar: {
+    width: AVATAR,
+    height: AVATAR,
+    borderRadius: AVATAR / 2,
+    overflow: 'hidden',
     backgroundColor: '#0d0a07',
-    borderWidth: 1,
-    borderColor: 'rgba(232,201,137,0.40)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: colors.gold,
     marginBottom: spacing.lg,
     shadowColor: colors.gold,
     shadowOpacity: 0.35,
-    shadowRadius: 26,
+    shadowRadius: 24,
     shadowOffset: {width: 0, height: 0},
     elevation: 8,
   },
-  monogramText: {
-    fontFamily: displayFont,
-    color: colors.champagne,
-    fontSize: 42,
-    fontWeight: '600',
-    letterSpacing: 2,
+  avatarImg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: AVATAR,
+    // portrait is 864x1536 (ratio 0.5625); keep aspect and align to top so the face shows
+    height: AVATAR * (1536 / 864),
+    resizeMode: 'cover',
   },
   name: {
     fontFamily: displayFont,

@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../types/navigation';
-import {colors, displayFont, font, radius, spacing} from '../constants/theme';
+import {colors, displayFont, font, spacing} from '../constants/theme';
 import {PROFILE, TEXTS} from '../constants/profile';
 import Hero from '../components/Hero';
 import Card from '../components/Card';
@@ -20,15 +20,6 @@ import {
 } from '../utils/actions';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
-
-function TrustChip({title, sub}: {title: string; sub: string}) {
-  return (
-    <View style={styles.chip}>
-      <Text style={styles.chipTitle}>{title}</Text>
-      <Text style={styles.chipSub}>{sub}</Text>
-    </View>
-  );
-}
 
 export default function HomeScreen({navigation}: Props) {
   const [emailCopied, setEmailCopied] = useState(false);
@@ -49,28 +40,19 @@ export default function HomeScreen({navigation}: Props) {
       <Card>
         <ActionButton
           label="Uložiť kontakt"
-          subtitle="Uložte si môj kontakt"
           icon="👤"
           chevron
           onPress={saveContact}
         />
-        <ActionButton
-          label="LinkedIn"
-          subtitle="Spojme sa profesionálne"
-          icon="in"
-          chevron
-          onPress={openLinkedIn}
-        />
+        <ActionButton label="LinkedIn" icon="in" chevron onPress={openLinkedIn} />
         <ActionButton
           label="Napísať e-mail"
-          subtitle="Otvorí poštovú aplikáciu"
           icon="✉️"
           chevron
           onPress={openEmail}
         />
         <ActionButton
           label="Kopírovať e-mail"
-          subtitle={PROFILE.email}
           icon="📋"
           chevron
           onPress={handleCopyEmail}
@@ -84,16 +66,9 @@ export default function HomeScreen({navigation}: Props) {
           chevron
           onPress={callPhone}
         />
-        <ActionButton
-          label="Facebook"
-          subtitle="Spojte sa na Facebooku"
-          icon="f"
-          chevron
-          onPress={openFacebook}
-        />
+        <ActionButton label="Facebook" icon="f" chevron onPress={openFacebook} />
         <ActionButton
           label="Rezervovať termín"
-          subtitle="Naživo cez Google Calendar"
           icon="📅"
           variant="cta"
           chevron
@@ -102,38 +77,27 @@ export default function HomeScreen({navigation}: Props) {
         <Text style={styles.tagline}>Spojme sa. Vytvorme hodnotu.</Text>
       </Card>
 
-      <View style={styles.chipRow}>
-        <TrustChip title="NFC" sub="Priložením" />
-        <TrustChip title="NAŽIVO" sub="Google Calendar" />
-        <TrustChip title="SÚKROMIE" sub="Dáta v bezpečí" />
-      </View>
-
       <Card>
         <SectionTitle title="Nástroje na networking" subtitle="Zdieľaj a zapisuj" />
         <ActionButton
-          label="Zdieľať vizitku"
-          subtitle="QR kód na vašu vizitku"
+          label="Zdieľať vizitku (QR)"
           icon="🔳"
           chevron
           onPress={() => navigation.navigate('ShareCard')}
         />
         <ActionButton
           label="Nastavenie NFC"
-          subtitle="Zapíšte odkaz na kartu/tag"
           icon="📶"
           chevron
           onPress={() => navigation.navigate('NfcSetup')}
         />
         <ActionButton
           label="Správa po stretnutí"
-          subtitle="Vygenerujte správu po stretnutí"
           icon="✍️"
           chevron
           onPress={() => navigation.navigate('FollowUpHelper')}
         />
       </Card>
-
-      <Text style={styles.bookingNote}>{TEXTS.bookingHelper}</Text>
 
       <Disclaimer />
       <Text style={styles.footer}>{TEXTS.footer}</Text>
@@ -155,46 +119,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: spacing.lg,
   },
-  chipRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
-  },
-  chip: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.sm,
-    alignItems: 'center',
-  },
-  chipTitle: {
-    color: colors.champagne,
-    fontSize: font.small - 2,
-    fontWeight: '700',
-    letterSpacing: 1.2,
-  },
-  chipSub: {
-    color: colors.muted,
-    fontSize: font.small - 3,
-    marginTop: 2,
-    textAlign: 'center',
-  },
-  bookingNote: {
-    color: colors.muted,
-    fontSize: font.small,
-    textAlign: 'center',
-    marginBottom: spacing.lg,
-  },
   footer: {
     color: colors.champagne,
-    fontSize: font.small - 1,
-    fontWeight: '700',
-    letterSpacing: 3,
+    fontFamily: displayFont,
+    fontStyle: 'italic',
+    fontSize: font.subtitle,
     textAlign: 'center',
     marginTop: spacing.lg,
-    textTransform: 'uppercase',
   },
 });
