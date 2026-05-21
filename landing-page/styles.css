@@ -285,53 +285,46 @@ body::before {
   padding: 20px 24px 4px;
 }
 
-/* A gold stripe that travels along the QR frame perimeter */
+/* A thick gold segment running exactly along the QR frame border (like a train on tracks) */
 .qr-orbit {
   position: relative;
-  width: 224px;
-  height: 224px;
+  width: 200px;
+  height: 200px;
   margin: 0 auto;
-  display: grid;
-  place-items: center;
 }
 
-.qr-runner {
+/* SVG overlay: a dashed stroke whose single dash travels around the rounded-rect border */
+.qr-track {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 92px;
-  height: 8px;
-  border-radius: 5px;
-  background: linear-gradient(
-    90deg,
-    rgba(232, 201, 137, 0) 0%,
-    var(--gold-2) 28%,
-    var(--champagne) 50%,
-    var(--gold-2) 72%,
-    rgba(232, 201, 137, 0) 100%
-  );
-  box-shadow: 0 0 16px 2px rgba(240, 217, 168, 0.85);
-  /* Travels along the rounded-rect path that sits on the frame border */
-  offset-path: path(
-    'M 30 16 H 194 A 14 14 0 0 1 208 30 V 194 A 14 14 0 0 1 194 208 H 30 A 14 14 0 0 1 16 194 V 30 A 14 14 0 0 1 30 16 Z'
-  );
-  offset-rotate: auto;
-  offset-distance: 0%;
-  animation: qr-run 3.4s linear infinite;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 2;
   pointer-events: none;
+  overflow: visible;
+}
+
+.qr-track rect {
+  fill: none;
+  stroke: #fbeaca;
+  stroke-width: 14;
+  stroke-linecap: round;
+  /* pathLength=100 -> dash = 26% segment, 74% gap = one travelling "train" */
+  stroke-dasharray: 26 74;
+  filter: drop-shadow(0 0 2px rgba(251, 234, 202, 0.9));
+  animation: qr-run 1.4s linear infinite;
 }
 
 @keyframes qr-run {
   to {
-    offset-distance: 100%;
+    stroke-dashoffset: -100;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .qr-runner {
+  .qr-track rect {
     animation: none;
-    opacity: 0;
+    stroke: transparent;
   }
 }
 
@@ -342,11 +335,11 @@ body::before {
   height: 200px;
   background: #fffdf6;
   border-radius: 16px;
-  border: 7px solid var(--gold-1);
+  border: 14px solid var(--gold-3);
   box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.7);
   display: grid;
   place-items: center;
-  padding: 11px;
+  padding: 8px;
 }
 
 .qr-frame img {
