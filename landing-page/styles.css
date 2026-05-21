@@ -306,12 +306,12 @@ body::before {
 
 .qr-track rect {
   fill: none;
-  stroke: #fbeaca;
-  stroke-width: 14;
+  stroke: url(#trainGold);
+  stroke-width: 20;
   stroke-linecap: round;
   /* pathLength=100 -> dash = 26% segment, 74% gap = one travelling "train" */
   stroke-dasharray: 26 74;
-  filter: drop-shadow(0 0 2px rgba(251, 234, 202, 0.9));
+  filter: drop-shadow(0 0 3px rgba(232, 201, 137, 0.8));
   animation: qr-run 1.4s linear infinite;
 }
 
@@ -334,12 +334,12 @@ body::before {
   width: 200px;
   height: 200px;
   background: #fffdf6;
-  border-radius: 16px;
-  border: 14px solid var(--gold-3);
-  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.7);
+  border-radius: 22px;
+  border: 20px solid var(--gold-3);
+  box-shadow: 0 16px 34px -14px rgba(0, 0, 0, 0.75);
   display: grid;
   place-items: center;
-  padding: 8px;
+  padding: 7px;
 }
 
 .qr-frame img {
