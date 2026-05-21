@@ -1,5 +1,5 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
+import {Pressable, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -41,7 +41,23 @@ export default function App() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{title: PROFILE.shortName}}
+            options={({navigation}) => ({
+              title: PROFILE.shortName,
+              headerRight: () => (
+                <View style={styles.headerRight}>
+                  <Pressable
+                    hitSlop={8}
+                    onPress={() => navigation.navigate('NfcSetup')}>
+                    <Text style={styles.headerBtn}>NFC</Text>
+                  </Pressable>
+                  <Pressable
+                    hitSlop={8}
+                    onPress={() => navigation.navigate('FollowUpHelper')}>
+                    <Text style={styles.headerBtn}>Správa</Text>
+                  </Pressable>
+                </View>
+              ),
+            })}
           />
           <Stack.Screen
             name="ShareCard"
@@ -63,3 +79,17 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 18,
+    marginRight: 4,
+  },
+  headerBtn: {
+    color: colors.gold,
+    fontSize: 14,
+    fontWeight: '700',
+  },
+});
