@@ -60,15 +60,18 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee ../gradle-build.log
 
-      - name: Upload APK as artifact
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jankovic-connect-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+      - name: Inventory of produced APKs
+        if: always()
+        run: |
+          echo "=== APK files under android/ ===" > apk-list.txt
+          find android -type f -name "*.apk" -printf "%p  (%s bytes)\n" 2>/dev/null >> apk-list.txt || true
+          echo "" >> apk-list.txt
+          echo "=== contents of release output dir ===" >> apk-list.txt
+          ls -la android/app/build/outputs/apk/release/ >> apk-list.txt 2>&1 || echo "(release dir missing)" >> apk-list.txt
+          cat apk-list.txt
 
-      - name: Publish APK to Release (easy phone download)
-        if: success()
+      - name: Publish APK + diagnostics to Release
+        if: always()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-latest
@@ -76,13 +79,7 @@ jobs:
           body: |
             Najnovšia verzia aplikácie Jankovič Connect (.apk).
             Stiahni `app-release.apk` do telefónu a nainštaluj (povoľ inštaláciu z neznámych zdrojov).
-          files: android/app/build/outputs/apk/release/app-release.apk
-
-      - name: Publish build log on failure
-        if: failure()
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: build-log
-          name: Build log (debug)
-          body: 'Posledný build APK zlyhal — log je v prílohe.'
-          files: gradle-build.log
+          files: |
+            android/**/*.apk
+            apk-list.txt
+            gradle-build.log
