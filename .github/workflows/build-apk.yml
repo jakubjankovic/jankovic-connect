@@ -80,6 +80,6 @@ jobs:
             Najnovšia verzia aplikácie Jankovič Connect (.apk).
             Stiahni `app-release.apk` do telefónu a nainštaluj (povoľ inštaláciu z neznámych zdrojov).
           files: |
-            android/**/*.apk
+            android/app/build/outputs/apk/release/app-release.apk
             apk-list.txt
             gradle-build.log
