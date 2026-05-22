@@ -8,6 +8,8 @@ const {ContactModule} = NativeModules as {
       name: string;
       phone: string;
       email: string;
+      phoneCompany: string;
+      emailCompany: string;
       website: string;
       title: string;
       notes: string;
@@ -50,6 +52,8 @@ export const saveContact = async (): Promise<void> => {
         name: PROFILE.fullName,
         phone: PROFILE.phone,
         email: PROFILE.email,
+        phoneCompany: PROFILE.phoneCompany,
+        emailCompany: PROFILE.emailCompany,
         website: PROFILE.website,
         title: PROFILE.headline,
         notes,

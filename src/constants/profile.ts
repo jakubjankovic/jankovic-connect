@@ -20,6 +20,9 @@ export const PROFILE = {
   phone: '+421 903 703 725',
   phoneDial: '+421903703725',
   email: 'jakubjankovic100@gmail.com',
+  phoneCompany: '+421 910 683 917',
+  phoneCompanyDial: '+421910683917',
+  emailCompany: 'jankovic.jakub.benjamin@slsp.sk',
   linkedin:
     'https://www.linkedin.com/in/jakub-benjamin-jankovi%C4%8D-b7929320b/',
   facebook: 'https://www.facebook.com/profile.php?id=100022833794468',

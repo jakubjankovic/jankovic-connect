@@ -32,9 +32,21 @@ class ContactModule(private val reactContext: ReactApplicationContext) :
                 putExtra(Insert.PHONE, contact.getStringSafe("phone"))
                 putExtra(Insert.PHONE_TYPE, Phone.TYPE_MOBILE)
                 putExtra(Insert.EMAIL, contact.getStringSafe("email"))
-                putExtra(Insert.EMAIL_TYPE, Email.TYPE_WORK)
+                putExtra(Insert.EMAIL_TYPE, Email.TYPE_HOME)
                 putExtra(Insert.JOB_TITLE, contact.getStringSafe("title"))
                 putExtra(Insert.NOTES, contact.getStringSafe("notes"))
+
+                // Company (secondary) phone + email
+                val phoneCompany = contact.getStringSafe("phoneCompany")
+                if (phoneCompany.isNotEmpty()) {
+                    putExtra(Insert.SECONDARY_PHONE, phoneCompany)
+                    putExtra(Insert.SECONDARY_PHONE_TYPE, Phone.TYPE_WORK)
+                }
+                val emailCompany = contact.getStringSafe("emailCompany")
+                if (emailCompany.isNotEmpty()) {
+                    putExtra(Insert.SECONDARY_EMAIL, emailCompany)
+                    putExtra(Insert.SECONDARY_EMAIL_TYPE, Email.TYPE_WORK)
+                }
 
                 val website = contact.getStringSafe("website")
                 if (website.isNotEmpty()) {

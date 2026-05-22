@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native';
-import {WebView} from 'react-native-webview';
+import {WebView, type WebViewMessageEvent} from 'react-native-webview';
 import {colors} from '../constants/theme';
 import {PUBLIC_CARD_URL} from '../constants/profile';
+import {saveContact} from '../utils/actions';
 
 /**
  * The app shows the OWNER's real public business card (the exact same page a
@@ -14,12 +15,24 @@ import {PUBLIC_CARD_URL} from '../constants/profile';
 export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
 
+  const onMessage = (e: WebViewMessageEvent) => {
+    try {
+      const msg = JSON.parse(e.nativeEvent.data);
+      if (msg && msg.type === 'saveContact') {
+        saveContact();
+      }
+    } catch {
+      // ignore non-JSON messages
+    }
+  };
+
   return (
     <View style={styles.screen}>
       <WebView
         source={{uri: PUBLIC_CARD_URL}}
         style={styles.web}
         originWhitelist={['*']}
+        onMessage={onMessage}
         onLoadEnd={() => setLoading(false)}
         startInLoadingState
         setSupportMultipleWindows={false}

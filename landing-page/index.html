@@ -19,7 +19,21 @@
     <main class="shell">
       <!-- HEADER -->
       <header class="header">
-        <div class="avatar" role="img" aria-label="Jakub Benjamin Jankovič"></div>
+        <div class="avatar-wrap">
+          <div class="avatar" role="img" aria-label="Jakub Benjamin Jankovič"></div>
+          <svg class="avatar-ring" viewBox="0 0 168 168" aria-hidden="true">
+            <defs>
+              <linearGradient id="avatarGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#c4922f" />
+                <stop offset="38%" stop-color="#f3d588" />
+                <stop offset="55%" stop-color="#fbeab4" />
+                <stop offset="70%" stop-color="#e3bb5d" />
+                <stop offset="100%" stop-color="#c4922f" />
+              </linearGradient>
+            </defs>
+            <circle cx="84" cy="84" r="81" pathLength="100" />
+          </svg>
+        </div>
         <h1 class="display name">Jakub Benjamin Jankovič</h1>
         <div class="role">Bankovníctvo • Networking • Vzťahy s klientmi</div>
         <div class="org">Digitálna vizitka</div>
@@ -51,13 +65,13 @@
           <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
         </a>
 
-        <a class="action-btn" id="email">
+        <button class="action-btn" id="email" type="button">
           <span class="ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><polyline points="3 7 12 13 21 7" /></svg>
           </span>
           <span class="label"><div class="t1">Napísať e-mail</div></span>
           <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
-        </a>
+        </button>
 
         <button class="action-btn" id="copyEmail" type="button">
           <span class="ic">
@@ -67,13 +81,13 @@
           <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
         </button>
 
-        <a class="action-btn" id="call">
+        <button class="action-btn" id="call" type="button">
           <span class="ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
           </span>
-          <span class="label"><div class="t1">Zavolať</div><div class="t2">+421 903 703 725</div></span>
+          <span class="label"><div class="t1">Zavolať</div></span>
           <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
-        </a>
+        </button>
 
         <a class="action-btn" id="facebook" target="_blank" rel="noopener">
           <span class="ic">
@@ -92,7 +106,7 @@
         </a>
       </nav>
 
-      <p class="tagline display">Spojme sa. Vytvorme hodnotu.</p>
+      <p class="tagline display gold-text">Spojme sa. Vytvorme hodnotu.</p>
 
       <div class="hairline"></div>
 
@@ -107,28 +121,35 @@
           <svg class="qr-track" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true">
             <defs>
               <linearGradient id="trainGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#9a7331" />
-                <stop offset="38%" stop-color="#f0d9a8" />
-                <stop offset="50%" stop-color="#fff4d6" />
-                <stop offset="62%" stop-color="#e8c989" />
-                <stop offset="100%" stop-color="#9a7331" />
+                <stop offset="0%" stop-color="#c4922f" />
+                <stop offset="38%" stop-color="#f3d588" />
+                <stop offset="50%" stop-color="#fbeab4" />
+                <stop offset="62%" stop-color="#e3bb5d" />
+                <stop offset="100%" stop-color="#c4922f" />
               </linearGradient>
             </defs>
             <rect x="10" y="10" width="180" height="180" rx="12" ry="12" pathLength="100" />
           </svg>
         </div>
-        <div class="qr-title">Oskenujte pre spojenie</div>
+        <div class="qr-title display gold-text">Oskenujte pre spojenie</div>
       </section>
 
-      <div class="hairline"></div>
-
-      <p class="trust">
-        Toto je moja osobná digitálna vizitka. Nejde o oficiálnu stránku banky
-        ani o individuálne finančné poradenstvo.
-      </p>
-
-      <div class="footer">Prajem Vám veľa úspechov</div>
+      <div class="footer display gold-text">Prajem Vám veľa úspechov</div>
     </main>
+
+    <!-- Chooser: personal / company -->
+    <div class="modal" id="chooser" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-title" id="chooserTitle"></div>
+        <button class="modal-opt" id="optPersonal" type="button">
+          <span class="o1">Osobný</span><span class="o2" id="optPersonalVal"></span>
+        </button>
+        <button class="modal-opt" id="optCompany" type="button">
+          <span class="o1">Firemný</span><span class="o2" id="optCompanyVal"></span>
+        </button>
+        <button class="modal-close" id="chooserClose" type="button">Zavrieť</button>
+      </div>
+    </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite">
       <span class="tic">✓</span><span id="toastMsg"></span>

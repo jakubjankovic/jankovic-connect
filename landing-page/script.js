@@ -1,30 +1,32 @@
 /* Jakub Benjamin Jankovič — Digital Contact Hub
- * Static landing page logic: real contact links, clipboard, vCard, QR target.
+ * Real links, personal/company chooser, clipboard, contact save.
+ * Inside the native app (WebView) "Save contact" opens the native Android
+ * contact screen; in a browser it downloads a .vcf.
  */
 
-// === Profile / links ===
 var PROFILE = {
   fullName: 'Jakub Benjamin Jankovič',
   firstName: 'Jakub Benjamin',
   lastName: 'Jankovič',
-  phone: '+421 903 703 725',
-  phoneDial: '+421903703725',
-  email: 'jakubjankovic100@gmail.com',
+  emailPersonal: 'jakubjankovic100@gmail.com',
+  emailCompany: 'jankovic.jakub.benjamin@slsp.sk',
+  phonePersonal: '+421 903 703 725',
+  phonePersonalDial: '+421903703725',
+  phoneCompany: '+421 910 683 917',
+  phoneCompanyDial: '+421910683917',
   linkedin: 'https://www.linkedin.com/in/jakub-benjamin-jankovi%C4%8D-b7929320b/',
   facebook: 'https://www.facebook.com/profile.php?id=100022833794468',
   title: 'Bankovníctvo • Networking • Vzťahy s klientmi',
 };
 
-// Public landing-page URL (what the QR / NFC tag / vCard website point to).
-// Set this to your PERMANENT deployed URL (see DEPLOY.md). The QR encodes it.
 var PUBLIC_CARD_URL = 'https://jakubjankovic.github.io/jankovic-connect/';
-
-// Real Google Calendar Appointment Schedule booking page.
 var BOOKING_LINK = 'https://calendar.app.google/hirwrfbkkEG6uXE16';
 
 function $(id) {
   return document.getElementById(id);
 }
+
+var inApp = !!window.ReactNativeWebView;
 
 function toast(message) {
   var el = $('toast');
@@ -62,6 +64,59 @@ function copyText(text) {
   });
 }
 
+/* ---- Personal / company chooser ---- */
+function openChooser(type) {
+  var titleEl = $('chooserTitle');
+  var pVal = $('optPersonalVal');
+  var cVal = $('optCompanyVal');
+  var pBtn = $('optPersonal');
+  var cBtn = $('optCompany');
+
+  function close() {
+    $('chooser').classList.remove('show');
+  }
+
+  if (type === 'email' || type === 'copy') {
+    titleEl.textContent = type === 'email' ? 'Napísať e-mail' : 'Kopírovať e-mail';
+    pVal.textContent = PROFILE.emailPersonal;
+    cVal.textContent = PROFILE.emailCompany;
+    pBtn.onclick = function () {
+      close();
+      if (type === 'email') {
+        location.href = 'mailto:' + PROFILE.emailPersonal;
+      } else {
+        copyText(PROFILE.emailPersonal).then(function () {
+          toast('Osobný e-mail skopírovaný');
+        });
+      }
+    };
+    cBtn.onclick = function () {
+      close();
+      if (type === 'email') {
+        location.href = 'mailto:' + PROFILE.emailCompany;
+      } else {
+        copyText(PROFILE.emailCompany).then(function () {
+          toast('Firemný e-mail skopírovaný');
+        });
+      }
+    };
+  } else if (type === 'call') {
+    titleEl.textContent = 'Zavolať';
+    pVal.textContent = PROFILE.phonePersonal;
+    cVal.textContent = PROFILE.phoneCompany;
+    pBtn.onclick = function () {
+      close();
+      location.href = 'tel:' + PROFILE.phonePersonalDial;
+    };
+    cBtn.onclick = function () {
+      close();
+      location.href = 'tel:' + PROFILE.phoneCompanyDial;
+    };
+  }
+  $('chooser').classList.add('show');
+}
+
+/* ---- Save contact ---- */
 function buildVCard() {
   var lines = [
     'BEGIN:VCARD',
@@ -69,12 +124,13 @@ function buildVCard() {
     'N:' + PROFILE.lastName + ';' + PROFILE.firstName + ';;;',
     'FN:' + PROFILE.fullName,
     'TITLE:' + PROFILE.title,
-    'TEL;TYPE=CELL:' + PROFILE.phoneDial,
-    'EMAIL;TYPE=WORK:' + PROFILE.email,
+    'TEL;TYPE=CELL:' + PROFILE.phonePersonalDial,
+    'TEL;TYPE=WORK:' + PROFILE.phoneCompanyDial,
+    'EMAIL;TYPE=HOME:' + PROFILE.emailPersonal,
+    'EMAIL;TYPE=WORK:' + PROFILE.emailCompany,
     'URL:' + PUBLIC_CARD_URL,
     'X-SOCIALPROFILE;TYPE=linkedin:' + PROFILE.linkedin,
     'X-SOCIALPROFILE;TYPE=facebook:' + PROFILE.facebook,
-    'NOTE:LinkedIn: ' + PROFILE.linkedin + '\\nFacebook: ' + PROFILE.facebook,
     'END:VCARD',
   ];
   return lines.join('\r\n');
@@ -94,26 +150,37 @@ function downloadVCard() {
   }, 1000);
 }
 
+function saveContact() {
+  if (inApp) {
+    // Native app: ask it to open the Android "add contact" screen.
+    window.ReactNativeWebView.postMessage(JSON.stringify({type: 'saveContact'}));
+    return;
+  }
+  downloadVCard();
+  toast('Kontakt stiahnutý');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-  // Wire real links
   $('linkedin').href = PROFILE.linkedin;
   $('facebook').href = PROFILE.facebook;
-  $('email').href = 'mailto:' + PROFILE.email;
-  $('call').href = 'tel:' + PROFILE.phoneDial;
   $('booking').href = BOOKING_LINK;
 
-  // Save Contact -> download .vcf
-  $('saveContact').addEventListener('click', function () {
-    downloadVCard();
-    toast('Kontakt stiahnutý (.vcf)');
+  $('saveContact').addEventListener('click', saveContact);
+  $('email').addEventListener('click', function () {
+    openChooser('email');
   });
-
-  // Copy email -> clipboard
   $('copyEmail').addEventListener('click', function () {
-    var btn = this;
-    copyText(PROFILE.email).then(function () {
-      flashSuccess(btn);
-      toast('E-mail skopírovaný');
-    });
+    openChooser('copy');
+  });
+  $('call').addEventListener('click', function () {
+    openChooser('call');
+  });
+  $('chooserClose').addEventListener('click', function () {
+    $('chooser').classList.remove('show');
+  });
+  $('chooser').addEventListener('click', function (e) {
+    if (e.target === this) {
+      this.classList.remove('show');
+    }
   });
 });
