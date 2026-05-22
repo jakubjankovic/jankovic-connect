@@ -192,6 +192,10 @@ function saveContact() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  // In the owner's app, hide the interactive buttons (clean card + QR only).
+  if (inApp) {
+    document.body.classList.add('in-app');
+  }
   preloadPhoto();
   $('linkedin').href = PROFILE.linkedin;
   $('facebook').href = PROFILE.facebook;
