@@ -14,7 +14,25 @@ const {ContactModule} = NativeModules as {
       title: string;
       notes: string;
     }) => Promise<boolean>;
+    importVCard: (vcard: string) => Promise<boolean>;
   };
+};
+
+/**
+ * Imports a vCard (which can carry an embedded photo) into Android contacts
+ * via the Contacts app — no contact-write permission needed.
+ */
+export const importVCard = async (vcard: string): Promise<void> => {
+  if (Platform.OS === 'android' && ContactModule?.importVCard) {
+    try {
+      await ContactModule.importVCard(vcard);
+      return;
+    } catch (e) {
+      Alert.alert('Kontakt sa nepodarilo otvoriť', String(e));
+      return;
+    }
+  }
+  Alert.alert('Nedostupné', 'Ukladanie kontaktu je dostupné iba na Androide.');
 };
 
 async function openUrl(url: string): Promise<void> {

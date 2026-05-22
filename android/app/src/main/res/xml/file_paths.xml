@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- The vCard is written to the app cache and shared read-only with the
+         Contacts app via FileProvider. -->
+    <cache-path name="cache" path="." />
+</paths>

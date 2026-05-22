@@ -117,13 +117,38 @@ function openChooser(type) {
 }
 
 /* ---- Save contact ---- */
+// Photo embedded into the contact (resized JPEG, base64). Prepared on load.
+var photoB64 = null;
+function preloadPhoto() {
+  try {
+    var img = new Image();
+    img.onload = function () {
+      try {
+        var maxW = 480;
+        var scale = Math.min(1, maxW / img.naturalWidth);
+        var w = Math.round(img.naturalWidth * scale);
+        var h = Math.round(img.naturalHeight * scale);
+        var c = document.createElement('canvas');
+        c.width = w;
+        c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        photoB64 = c.toDataURL('image/jpeg', 0.82).split(',')[1] || null;
+      } catch (e) {
+        photoB64 = null;
+      }
+    };
+    img.src = 'portrait.png';
+  } catch (e) {
+    photoB64 = null;
+  }
+}
+
 function buildVCard() {
   var lines = [
     'BEGIN:VCARD',
     'VERSION:3.0',
     'N:' + PROFILE.lastName + ';' + PROFILE.firstName + ';;;',
     'FN:' + PROFILE.fullName,
-    'TITLE:' + PROFILE.title,
     'TEL;TYPE=CELL:' + PROFILE.phonePersonalDial,
     'TEL;TYPE=WORK:' + PROFILE.phoneCompanyDial,
     'EMAIL;TYPE=HOME:' + PROFILE.emailPersonal,
@@ -131,8 +156,11 @@ function buildVCard() {
     'URL:' + PUBLIC_CARD_URL,
     'X-SOCIALPROFILE;TYPE=linkedin:' + PROFILE.linkedin,
     'X-SOCIALPROFILE;TYPE=facebook:' + PROFILE.facebook,
-    'END:VCARD',
   ];
+  if (photoB64) {
+    lines.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64);
+  }
+  lines.push('END:VCARD');
   return lines.join('\r\n');
 }
 
@@ -152,8 +180,11 @@ function downloadVCard() {
 
 function saveContact() {
   if (inApp) {
-    // Native app: ask it to open the Android "add contact" screen.
-    window.ReactNativeWebView.postMessage(JSON.stringify({type: 'saveContact'}));
+    // Native app: hand the full vCard (incl. photo) to the app, which imports
+    // it into Android contacts.
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({type: 'saveContact', vcard: buildVCard()}),
+    );
     return;
   }
   downloadVCard();
@@ -161,6 +192,7 @@ function saveContact() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  preloadPhoto();
   $('linkedin').href = PROFILE.linkedin;
   $('facebook').href = PROFILE.facebook;
   $('booking').href = BOOKING_LINK;

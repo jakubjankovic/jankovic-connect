@@ -3,7 +3,7 @@ import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native';
 import {WebView, type WebViewMessageEvent} from 'react-native-webview';
 import {colors} from '../constants/theme';
 import {PUBLIC_CARD_URL} from '../constants/profile';
-import {saveContact} from '../utils/actions';
+import {importVCard, saveContact} from '../utils/actions';
 
 /**
  * The app shows the OWNER's real public business card (the exact same page a
@@ -19,7 +19,11 @@ export default function HomeScreen() {
     try {
       const msg = JSON.parse(e.nativeEvent.data);
       if (msg && msg.type === 'saveContact') {
-        saveContact();
+        if (typeof msg.vcard === 'string' && msg.vcard.length > 0) {
+          importVCard(msg.vcard);
+        } else {
+          saveContact();
+        }
       }
     } catch {
       // ignore non-JSON messages

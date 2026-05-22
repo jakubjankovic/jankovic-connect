@@ -6,11 +6,13 @@ import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.Website
 import android.provider.ContactsContract.Intents.Insert
+import androidx.core.content.FileProvider
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
+import java.io.File
 
 /**
  * Opens the native Android "insert contact" screen prefilled with the
@@ -33,7 +35,6 @@ class ContactModule(private val reactContext: ReactApplicationContext) :
                 putExtra(Insert.PHONE_TYPE, Phone.TYPE_MOBILE)
                 putExtra(Insert.EMAIL, contact.getStringSafe("email"))
                 putExtra(Insert.EMAIL_TYPE, Email.TYPE_HOME)
-                putExtra(Insert.JOB_TITLE, contact.getStringSafe("title"))
                 putExtra(Insert.NOTES, contact.getStringSafe("notes"))
 
                 // Company (secondary) phone + email
@@ -73,6 +74,33 @@ class ContactModule(private val reactContext: ReactApplicationContext) :
             promise.resolve(true)
         } catch (e: Exception) {
             promise.reject("CONTACT_INSERT_ERROR", e.message, e)
+        }
+    }
+
+    /**
+     * Writes a vCard (which may contain an embedded photo) to a cache file and
+     * opens it with the Contacts app, which imports the contact — including the
+     * photo — without needing the WRITE_CONTACTS permission.
+     */
+    @ReactMethod
+    fun importVCard(vcard: String, promise: Promise) {
+        try {
+            val file = File(reactContext.cacheDir, "jankovic-contact.vcf")
+            file.writeText(vcard)
+            val uri = FileProvider.getUriForFile(
+                reactContext,
+                reactContext.packageName + ".fileprovider",
+                file,
+            )
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "text/x-vcard")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            (currentActivity ?: reactContext).startActivity(intent)
+            promise.resolve(true)
+        } catch (e: Exception) {
+            promise.reject("VCARD_IMPORT_ERROR", e.message, e)
         }
     }
 
