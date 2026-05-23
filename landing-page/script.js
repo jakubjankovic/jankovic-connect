@@ -29,7 +29,7 @@ var TR = {
     org: 'Digitálna vizitka',
     location: 'Bratislava, Slovensko',
     intro:
-      'Rád prepájam ľudí, budujem profesionálne vzťahy a vediem zmysluplné rozhovory o kariére, financiách, príležitostiach a osobnom raste.',
+      'Prepájam ľudí, budujem profesionálne vzťahy a vediem zmysluplné rozhovory o kariére, financiách, príležitostiach a osobnom raste.',
     save: 'Uložiť kontakt',
     linkedin: 'LinkedIn',
     whatsapp: 'WhatsApp',
@@ -62,7 +62,7 @@ var TR = {
     org: 'Digital business card',
     location: 'Bratislava, Slovakia',
     intro:
-      'I love connecting people, building professional relationships and having meaningful conversations about careers, finance, opportunities and personal growth.',
+      'I connect people, build professional relationships and have meaningful conversations about careers, finance, opportunities and personal growth.',
     save: 'Save contact',
     linkedin: 'LinkedIn',
     whatsapp: 'WhatsApp',

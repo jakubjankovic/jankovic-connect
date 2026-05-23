@@ -110,10 +110,10 @@ body::before {
   border-radius: 50%;
   border: 3px solid var(--gold-1);
   background-color: #0d0a07;
-  background-image: url('portrait-600.jpg');
+  background-image: url('portrait-600.jpg?v=3');
   background-repeat: no-repeat;
-  background-size: 185%;
-  background-position: 52% 26%;
+  background-size: cover;
+  background-position: 50% 6%;
   box-shadow:
     0 0 0 5px rgba(227, 187, 93, 0.12),
     0 18px 40px -14px rgba(0, 0, 0, 0.8);
