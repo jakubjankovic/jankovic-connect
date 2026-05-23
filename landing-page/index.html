@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; base-uri 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://gc.zgo.at; connect-src 'self' https://gc.zgo.at; worker-src 'self'; manifest-src 'self'; form-action 'none'" />
+      content="default-src 'self'; base-uri 'self'; img-src 'self' data: https://*.goatcounter.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://gc.zgo.at; connect-src 'self' https://gc.zgo.at https://*.goatcounter.com; worker-src 'self'; manifest-src 'self'; form-action 'none'" />
     <meta name="theme-color" content="#050403" />
     <meta name="color-scheme" content="dark" />
     <meta name="description" content="Osobná digitálna vizitka — Jakub Benjamin Jankovič. Bankovníctvo • Networking • Vzťahy s klientmi." />
@@ -231,15 +231,12 @@
       <span class="tic" aria-hidden="true">✓</span><span id="toastMsg"></span>
     </div>
 
-    <!-- Anonymné štatistiky (bez cookies, bez sledovania osôb).
-         Eventy (Uložiť kontakt, Rezervovať termín, Volať, WhatsApp, jazyk) sú už
-         napojené v script.js cez window.goatcounter.count(...). Stačí:
-         1) vytvoriť si zdarma stránku na goatcounter.com,
-         2) odkomentovať riadok nižšie a doplniť svoj kód.
-         CSP už povoľuje doménu gc.zgo.at.
-    <script data-goatcounter="https://TVOJKOD.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
-    -->
+    <!-- Anonymné štatistiky: GoatCounter (bez cookies, bez sledovania osôb).
+         Načítava sa dynamicky v script.js LEN pre verejných návštevníkov (nie
+         v tvojej appke). Účet/kód sa nastavuje premennou GOATCOUNTER v script.js.
+         Eventy (Uložiť, Rezervovať, Volať, WhatsApp, jazyk) sú napojené.
+         Štatistiky budú na: https://jankovic-connect.goatcounter.com -->
 
-    <script src="script.js?v=6" defer></script>
+    <script src="script.js?v=7" defer></script>
   </body>
 </html>

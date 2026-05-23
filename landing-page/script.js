@@ -25,6 +25,10 @@ var PUBLIC_CARD_URL = 'https://jakubjankovic.github.io/jankovic-connect/';
 var BOOKING_LINK = 'https://calendar.app.google/hirwrfbkkEG6uXE16';
 var PHOTO_URL = 'portrait-600.jpg?v=5';
 
+// Anonymous, cookieless stats (GoatCounter). Set to '' to disable.
+// Create the free account at goatcounter.com and claim this exact code.
+var GOATCOUNTER = 'https://jankovic-connect.goatcounter.com/count';
+
 var TR = {
   sk: {
     role: 'Bankovníctvo • Networking • Vzťahy s klientmi',
@@ -498,6 +502,15 @@ document.addEventListener('DOMContentLoaded', function () {
       saveContact();
     }
   } catch (e) {}
+
+  // Anonymous stats for PUBLIC visitors only (never counts the owner's own app).
+  if (!inApp && GOATCOUNTER) {
+    var gc = document.createElement('script');
+    gc.async = true;
+    gc.setAttribute('data-goatcounter', GOATCOUNTER);
+    gc.src = 'https://gc.zgo.at/count.js';
+    document.body.appendChild(gc);
+  }
 
   // Progressive enhancement: register service worker for instant repeat loads
   // and offline support (skipped inside the native app WebView).
