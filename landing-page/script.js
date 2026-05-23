@@ -1,7 +1,6 @@
 /* Jakub Benjamin Jankovič — Digital Contact Hub
- * Real links, personal/company chooser, clipboard, contact save.
- * Inside the native app (WebView) "Save contact" opens the native Android
- * contact screen; in a browser it downloads a .vcf.
+ * Links, personal/company chooser, WhatsApp, share, clipboard, vCard (with
+ * photo, no title), SK/EN language toggle, accessibility.
  */
 
 var PROFILE = {
@@ -12,21 +11,109 @@ var PROFILE = {
   emailCompany: 'jankovic.jakub.benjamin@slsp.sk',
   phonePersonal: '+421 903 703 725',
   phonePersonalDial: '+421903703725',
+  phonePersonalWa: '421903703725',
   phoneCompany: '+421 910 683 917',
   phoneCompanyDial: '+421910683917',
+  phoneCompanyWa: '421910683917',
   linkedin: 'https://www.linkedin.com/in/jakub-benjamin-jankovi%C4%8D-b7929320b/',
   facebook: 'https://www.facebook.com/profile.php?id=100022833794468',
-  title: 'Bankovníctvo • Networking • Vzťahy s klientmi',
 };
 
 var PUBLIC_CARD_URL = 'https://jakubjankovic.github.io/jankovic-connect/';
 var BOOKING_LINK = 'https://calendar.app.google/hirwrfbkkEG6uXE16';
 
+var TR = {
+  sk: {
+    toggle: 'EN',
+    role: 'Bankovníctvo • Networking • Vzťahy s klientmi',
+    org: 'Digitálna vizitka',
+    location: 'Bratislava, Slovensko',
+    intro:
+      'Rád prepájam ľudí, budujem profesionálne vzťahy a vediem zmysluplné rozhovory o kariére, financiách, príležitostiach a osobnom raste.',
+    save: 'Uložiť kontakt',
+    linkedin: 'LinkedIn',
+    whatsapp: 'WhatsApp',
+    email: 'Napísať e-mail',
+    copy: 'Kopírovať e-mail',
+    call: 'Zavolať',
+    facebook: 'Facebook',
+    book: 'Rezervovať termín',
+    share: 'Zdieľať vizitku',
+    tagline: 'Spojme sa. Vytvorme hodnotu.',
+    qr: 'Oskenujte pre spojenie',
+    disclaimer:
+      'Toto je osobná digitálna vizitka. Nejde o oficiálnu stránku banky ani o individuálne finančné poradenstvo.',
+    footer: 'Prajem Vám veľa úspechov',
+    personal: 'Osobný',
+    company: 'Firemný',
+    close: 'Zavrieť',
+    ch_email: 'Napísať e-mail',
+    ch_copy: 'Kopírovať e-mail',
+    ch_call: 'Zavolať',
+    ch_whatsapp: 'WhatsApp',
+    t_contact: 'Kontakt stiahnutý',
+    t_copied_p: 'Osobný e-mail skopírovaný',
+    t_copied_c: 'Firemný e-mail skopírovaný',
+    t_shared: 'Odkaz skopírovaný',
+  },
+  en: {
+    toggle: 'SK',
+    role: 'Banking • Networking • Client Relationships',
+    org: 'Digital business card',
+    location: 'Bratislava, Slovakia',
+    intro:
+      'I love connecting people, building professional relationships and having meaningful conversations about careers, finance, opportunities and personal growth.',
+    save: 'Save contact',
+    linkedin: 'LinkedIn',
+    whatsapp: 'WhatsApp',
+    email: 'Send email',
+    copy: 'Copy email',
+    call: 'Call',
+    facebook: 'Facebook',
+    book: 'Book a meeting',
+    share: 'Share card',
+    tagline: "Let's connect. Let's create value.",
+    qr: 'Scan to connect',
+    disclaimer:
+      'This is a personal digital business card. It is not an official bank website or individual financial advice.',
+    footer: 'Wishing you great success',
+    personal: 'Personal',
+    company: 'Company',
+    close: 'Close',
+    ch_email: 'Send email',
+    ch_copy: 'Copy email',
+    ch_call: 'Call',
+    ch_whatsapp: 'WhatsApp',
+    t_contact: 'Contact downloaded',
+    t_copied_p: 'Personal email copied',
+    t_copied_c: 'Company email copied',
+    t_shared: 'Link copied',
+  },
+};
+
+var lang = 'sk';
+var inApp = !!window.ReactNativeWebView;
+
 function $(id) {
   return document.getElementById(id);
 }
+function t(key) {
+  return (TR[lang] && TR[lang][key]) || key;
+}
 
-var inApp = !!window.ReactNativeWebView;
+function translate(next) {
+  lang = next;
+  document.documentElement.lang = next;
+  try {
+    localStorage.setItem('jbj_lang', next);
+  } catch (e) {}
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    var k = el.getAttribute('data-i18n');
+    if (TR[next][k] != null) {
+      el.textContent = TR[next][k];
+    }
+  });
+}
 
 function toast(message) {
   var el = $('toast');
@@ -64,80 +151,79 @@ function copyText(text) {
   });
 }
 
-/* ---- Personal / company chooser ---- */
+/* ---- Personal / company chooser (email / copy / call / whatsapp) ---- */
+function closeChooser() {
+  $('chooser').classList.remove('show');
+}
+
 function openChooser(type) {
-  var titleEl = $('chooserTitle');
-  var pVal = $('optPersonalVal');
-  var cVal = $('optCompanyVal');
-  var pBtn = $('optPersonal');
-  var cBtn = $('optCompany');
+  var titles = {email: 'ch_email', copy: 'ch_copy', call: 'ch_call', whatsapp: 'ch_whatsapp'};
+  $('chooserTitle').textContent = t(titles[type]);
+  $('optPersonalLabel').textContent = t('personal');
+  $('optCompanyLabel').textContent = t('company');
+  $('chooserClose').textContent = t('close');
 
-  function close() {
-    $('chooser').classList.remove('show');
-  }
+  var isPhone = type === 'call' || type === 'whatsapp';
+  $('optPersonalVal').textContent = isPhone ? PROFILE.phonePersonal : PROFILE.emailPersonal;
+  $('optCompanyVal').textContent = isPhone ? PROFILE.phoneCompany : PROFILE.emailCompany;
 
-  if (type === 'email' || type === 'copy') {
-    titleEl.textContent = type === 'email' ? 'Napísať e-mail' : 'Kopírovať e-mail';
-    pVal.textContent = PROFILE.emailPersonal;
-    cVal.textContent = PROFILE.emailCompany;
-    pBtn.onclick = function () {
-      close();
-      if (type === 'email') {
-        location.href = 'mailto:' + PROFILE.emailPersonal;
-      } else {
-        copyText(PROFILE.emailPersonal).then(function () {
-          toast('Osobný e-mail skopírovaný');
-        });
-      }
-    };
-    cBtn.onclick = function () {
-      close();
-      if (type === 'email') {
-        location.href = 'mailto:' + PROFILE.emailCompany;
-      } else {
-        copyText(PROFILE.emailCompany).then(function () {
-          toast('Firemný e-mail skopírovaný');
-        });
-      }
-    };
-  } else if (type === 'call') {
-    titleEl.textContent = 'Zavolať';
-    pVal.textContent = PROFILE.phonePersonal;
-    cVal.textContent = PROFILE.phoneCompany;
-    pBtn.onclick = function () {
-      close();
-      location.href = 'tel:' + PROFILE.phonePersonalDial;
-    };
-    cBtn.onclick = function () {
-      close();
-      location.href = 'tel:' + PROFILE.phoneCompanyDial;
-    };
-  }
+  $('optPersonal').onclick = function () {
+    closeChooser();
+    doAction(type, true);
+  };
+  $('optCompany').onclick = function () {
+    closeChooser();
+    doAction(type, false);
+  };
+
   $('chooser').classList.add('show');
+  $('optPersonal').focus();
+}
+
+function doAction(type, personal) {
+  if (type === 'email') {
+    location.href = 'mailto:' + (personal ? PROFILE.emailPersonal : PROFILE.emailCompany);
+  } else if (type === 'copy') {
+    copyText(personal ? PROFILE.emailPersonal : PROFILE.emailCompany).then(function () {
+      toast(personal ? t('t_copied_p') : t('t_copied_c'));
+    });
+  } else if (type === 'call') {
+    location.href = 'tel:' + (personal ? PROFILE.phonePersonalDial : PROFILE.phoneCompanyDial);
+  } else if (type === 'whatsapp') {
+    window.open('https://wa.me/' + (personal ? PROFILE.phonePersonalWa : PROFILE.phoneCompanyWa), '_blank');
+  }
+}
+
+/* ---- Share ---- */
+function shareCard() {
+  if (navigator.share) {
+    navigator
+      .share({title: PROFILE.fullName, text: t('role'), url: PUBLIC_CARD_URL})
+      .catch(function () {});
+  } else {
+    copyText(PUBLIC_CARD_URL).then(function () {
+      toast(t('t_shared'));
+    });
+  }
 }
 
 /* ---- Save contact ---- */
-// Photo embedded into the contact (resized JPEG, base64). Prepared on load.
 var photoB64 = null;
 function preloadPhoto() {
   try {
     var img = new Image();
     img.onload = function () {
       try {
-        var maxW = 480;
-        var scale = Math.min(1, maxW / img.naturalWidth);
-        var w = Math.round(img.naturalWidth * scale);
-        var h = Math.round(img.naturalHeight * scale);
         var c = document.createElement('canvas');
-        c.width = w;
-        c.height = h;
-        c.getContext('2d').drawImage(img, 0, 0, w, h);
-        photoB64 = c.toDataURL('image/jpeg', 0.82).split(',')[1] || null;
+        c.width = img.naturalWidth;
+        c.height = img.naturalHeight;
+        c.getContext('2d').drawImage(img, 0, 0);
+        photoB64 = c.toDataURL('image/jpeg', 0.85).split(',')[1] || null;
       } catch (e) {
         photoB64 = null;
       }
     };
-    img.src = 'portrait.png';
+    img.src = 'portrait-600.jpg';
   } catch (e) {
     photoB64 = null;
   }
@@ -180,27 +266,35 @@ function downloadVCard() {
 
 function saveContact() {
   if (inApp) {
-    // Native app: hand the full vCard (incl. photo) to the app, which imports
-    // it into Android contacts.
     window.ReactNativeWebView.postMessage(
       JSON.stringify({type: 'saveContact', vcard: buildVCard()}),
     );
     return;
   }
   downloadVCard();
-  toast('Kontakt stiahnutý');
+  toast(t('t_contact'));
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  // In the owner's app, hide the interactive buttons (clean card + QR only).
   if (inApp) {
     document.body.classList.add('in-app');
   }
   preloadPhoto();
+
+  // Apply saved language
+  var saved = 'sk';
+  try {
+    saved = localStorage.getItem('jbj_lang') || 'sk';
+  } catch (e) {}
+  translate(saved === 'en' ? 'en' : 'sk');
+
   $('linkedin').href = PROFILE.linkedin;
   $('facebook').href = PROFILE.facebook;
   $('booking').href = BOOKING_LINK;
 
+  $('langToggle').addEventListener('click', function () {
+    translate(lang === 'sk' ? 'en' : 'sk');
+  });
   $('saveContact').addEventListener('click', saveContact);
   $('email').addEventListener('click', function () {
     openChooser('email');
@@ -211,12 +305,19 @@ document.addEventListener('DOMContentLoaded', function () {
   $('call').addEventListener('click', function () {
     openChooser('call');
   });
-  $('chooserClose').addEventListener('click', function () {
-    $('chooser').classList.remove('show');
+  $('whatsapp').addEventListener('click', function () {
+    openChooser('whatsapp');
   });
+  $('share').addEventListener('click', shareCard);
+  $('chooserClose').addEventListener('click', closeChooser);
   $('chooser').addEventListener('click', function (e) {
     if (e.target === this) {
-      this.classList.remove('show');
+      closeChooser();
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      closeChooser();
     }
   });
 });

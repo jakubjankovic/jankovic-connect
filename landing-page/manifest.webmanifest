@@ -1,0 +1,18 @@
+{
+  "name": "Jakub Benjamin Jankovič",
+  "short_name": "JBJ Connect",
+  "description": "Osobná digitálna vizitka — Bankovníctvo • Networking • Vzťahy s klientmi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#050403",
+  "theme_color": "#050403",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

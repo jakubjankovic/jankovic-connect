@@ -110,7 +110,7 @@ body::before {
   border-radius: 50%;
   border: 3px solid var(--gold-1);
   background-color: #0d0a07;
-  background-image: url('portrait.png');
+  background-image: url('portrait-600.jpg');
   background-repeat: no-repeat;
   background-size: 185%;
   background-position: 52% 26%;
@@ -164,6 +164,44 @@ body::before {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-weight: 600;
+}
+
+.location {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-top: 6px;
+}
+
+/* Language toggle (top-right of the card) */
+.lang-toggle {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 40px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(243, 213, 136, 0.5);
+  background: rgba(232, 196, 104, 0.1);
+  color: var(--champagne);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.lang-toggle:hover {
+  border-color: rgba(243, 213, 136, 0.85);
+  background: rgba(232, 196, 104, 0.16);
+}
+
+.disclaimer {
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 11px;
+  line-height: 1.5;
+  padding: 16px 28px 0;
 }
 
 .intro {
