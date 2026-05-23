@@ -170,8 +170,11 @@ body::before {
   top: 14px;
   right: 14px;
   z-index: 5;
-  width: 40px;
-  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 11px;
   border-radius: 999px;
   border: 1.5px solid rgba(243, 213, 136, 0.5);
   background: rgba(232, 196, 104, 0.1);
@@ -186,6 +189,14 @@ body::before {
 .lang-toggle:hover {
   border-color: rgba(243, 213, 136, 0.85);
   background: rgba(232, 196, 104, 0.16);
+}
+
+.lang-toggle .flag {
+  width: 20px;
+  height: 14px;
+  border-radius: 2px;
+  display: block;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
 }
 
 .disclaimer {

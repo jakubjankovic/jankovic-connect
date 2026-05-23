@@ -91,6 +91,30 @@ var TR = {
   },
 };
 
+// Compact SVG flags for the language toggle
+var FLAG_UK =
+  '<svg class="flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">' +
+  '<clipPath id="ukc"><rect width="60" height="30"/></clipPath>' +
+  '<clipPath id="ukt"><path d="M30,15 60,0 60,15ZM30,15 60,30 30,30ZM30,15 0,30 0,15ZM30,15 0,0 30,0Z"/></clipPath>' +
+  '<g clip-path="url(#ukc)">' +
+  '<rect width="60" height="30" fill="#012169"/>' +
+  '<path d="M0,0 60,30M60,0 0,30" stroke="#fff" stroke-width="6"/>' +
+  '<path d="M0,0 60,30M60,0 0,30" clip-path="url(#ukt)" stroke="#C8102E" stroke-width="4"/>' +
+  '<path d="M30,0V30M0,15H60" stroke="#fff" stroke-width="10"/>' +
+  '<path d="M30,0V30M0,15H60" stroke="#C8102E" stroke-width="6"/>' +
+  '</g></svg>';
+
+var FLAG_SK =
+  '<svg class="flag" viewBox="0 0 90 60" xmlns="http://www.w3.org/2000/svg">' +
+  '<rect width="90" height="60" fill="#ee1c25"/>' +
+  '<rect width="90" height="40" fill="#0b4ea2"/>' +
+  '<rect width="90" height="20" fill="#fff"/>' +
+  '<path d="M13,12h24v22c0,9-12,13-12,13s-12-4-12-13z" fill="#fff"/>' +
+  '<path d="M16,15h18v19c0,7-9,10-9,10s-9-3-9-10z" fill="#ee1c25"/>' +
+  '<g fill="#fff"><rect x="23.5" y="18" width="3" height="22"/><rect x="18.5" y="22.5" width="13" height="3"/><rect x="20.5" y="28" width="9" height="3"/></g>' +
+  '<path d="M16,38c3-3,6-3,9,0c3-3,6-3,9,0v6h-18z" fill="#0b4ea2"/>' +
+  '</svg>';
+
 var lang = 'sk';
 var inApp = !!window.ReactNativeWebView;
 
@@ -113,6 +137,16 @@ function translate(next) {
       el.textContent = TR[next][k];
     }
   });
+  // Toggle shows the flag + code of the language you switch TO
+  var tg = $('langToggle');
+  if (tg) {
+    tg.innerHTML =
+      next === 'sk' ? FLAG_UK + '<span>EN</span>' : FLAG_SK + '<span>SK</span>';
+    tg.setAttribute(
+      'aria-label',
+      next === 'sk' ? 'Switch to English' : 'Prepnúť do slovenčiny',
+    );
+  }
 }
 
 function toast(message) {
