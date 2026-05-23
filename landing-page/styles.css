@@ -321,15 +321,42 @@ body::before {
   background: rgba(111, 212, 154, 0.1);
 }
 
-/* Inside the owner's app the action buttons are hidden — it shows a clean
-   card (photo, name, tagline, QR) the owner can present. The public page
-   (NFC/QR visitors) is unaffected. */
-.in-app .actions {
+/* Inside the owner's app: show ONLY the gold QR code, nothing else.
+   The public page (what visitors see) is completely unaffected. */
+body.in-app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+body.in-app .shell {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  max-width: none;
+  overflow: visible;
+}
+
+body.in-app .header,
+body.in-app .actions,
+body.in-app .tagline,
+body.in-app .hairline,
+body.in-app .qr-title,
+body.in-app .disclaimer,
+body.in-app .footer,
+body.in-app .lang-toggle {
   display: none;
 }
 
-.in-app .tagline {
-  padding-top: 6px;
+body.in-app .qr-card {
+  padding: 0;
+}
+
+body.in-app .qr-orbit {
+  transform: scale(1.2);
 }
 
 /* ---- Tagline (bigger, gold) ---- */
