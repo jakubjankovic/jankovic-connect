@@ -1,6 +1,8 @@
 /* Jakub Benjamin Jankovič — Digital Contact Hub
- * Links, personal/company chooser, WhatsApp, share, clipboard, vCard (with
- * photo, no title), SK/EN language toggle, accessibility.
+ * Links, personal/company chooser, WhatsApp, share, clipboard, vCard 3.0
+ * (RFC-2426 line folding + escaping + photo), SK/EN/DE language toggle with
+ * browser auto-detect, privacy-friendly event tracking, service worker,
+ * accessibility (focus-visible, modal focus trap).
  */
 
 var PROFILE = {
@@ -21,10 +23,10 @@ var PROFILE = {
 
 var PUBLIC_CARD_URL = 'https://jakubjankovic.github.io/jankovic-connect/';
 var BOOKING_LINK = 'https://calendar.app.google/hirwrfbkkEG6uXE16';
+var PHOTO_URL = 'portrait-600.jpg?v=5';
 
 var TR = {
   sk: {
-    toggle: 'EN',
     role: 'Bankovníctvo • Networking • Vzťahy s klientmi',
     org: 'Digitálna vizitka',
     location: 'Bratislava, Slovensko',
@@ -57,7 +59,6 @@ var TR = {
     t_shared: 'Odkaz skopírovaný',
   },
   en: {
-    toggle: 'SK',
     role: 'Banking • Networking • Client Relationships',
     org: 'Digital business card',
     location: 'Bratislava, Slovakia',
@@ -89,11 +90,46 @@ var TR = {
     t_copied_c: 'Company email copied',
     t_shared: 'Link copied',
   },
+  de: {
+    role: 'Bankwesen • Networking • Kundenbeziehungen',
+    org: 'Digitale Visitenkarte',
+    location: 'Bratislava, Slowakei',
+    intro:
+      'Ich verbinde Menschen, baue berufliche Beziehungen auf und führe sinnvolle Gespräche über Karriere, Finanzen, Chancen und persönliche Entwicklung.',
+    save: 'Kontakt speichern',
+    linkedin: 'LinkedIn',
+    whatsapp: 'WhatsApp',
+    email: 'E-Mail schreiben',
+    copy: 'E-Mail kopieren',
+    call: 'Anrufen',
+    facebook: 'Facebook',
+    book: 'Termin buchen',
+    share: 'Visitenkarte teilen',
+    tagline: 'Verbinden wir uns. Schaffen wir Wert.',
+    qr: 'Zum Verbinden scannen',
+    disclaimer:
+      'Dies ist eine persönliche digitale Visitenkarte. Es handelt sich nicht um eine offizielle Bank-Website oder um individuelle Finanzberatung.',
+    footer: 'Ich wünsche Ihnen viel Erfolg',
+    personal: 'Privat',
+    company: 'Geschäftlich',
+    close: 'Schließen',
+    ch_email: 'E-Mail schreiben',
+    ch_copy: 'E-Mail kopieren',
+    ch_call: 'Anrufen',
+    ch_whatsapp: 'WhatsApp',
+    t_contact: 'Kontakt heruntergeladen',
+    t_copied_p: 'Private E-Mail kopiert',
+    t_copied_c: 'Geschäftliche E-Mail kopiert',
+    t_shared: 'Link kopiert',
+  },
 };
+
+// Language cycle order for the single toggle button
+var NEXT_LANG = {sk: 'en', en: 'de', de: 'sk'};
 
 // Compact SVG flags for the language toggle
 var FLAG_UK =
-  '<svg class="flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">' +
+  '<svg class="flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
   '<clipPath id="ukc"><rect width="60" height="30"/></clipPath>' +
   '<clipPath id="ukt"><path d="M30,15 60,0 60,15ZM30,15 60,30 30,30ZM30,15 0,30 0,15ZM30,15 0,0 30,0Z"/></clipPath>' +
   '<g clip-path="url(#ukc)">' +
@@ -105,7 +141,7 @@ var FLAG_UK =
   '</g></svg>';
 
 var FLAG_SK =
-  '<svg class="flag" viewBox="0 0 90 60" xmlns="http://www.w3.org/2000/svg">' +
+  '<svg class="flag" viewBox="0 0 90 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
   '<rect width="90" height="60" fill="#ee1c25"/>' +
   '<rect width="90" height="40" fill="#0b4ea2"/>' +
   '<rect width="90" height="20" fill="#fff"/>' +
@@ -114,6 +150,21 @@ var FLAG_SK =
   '<g fill="#fff"><rect x="23.5" y="18" width="3" height="22"/><rect x="18.5" y="22.5" width="13" height="3"/><rect x="20.5" y="28" width="9" height="3"/></g>' +
   '<path d="M16,38c3-3,6-3,9,0c3-3,6-3,9,0v6h-18z" fill="#0b4ea2"/>' +
   '</svg>';
+
+var FLAG_DE =
+  '<svg class="flag" viewBox="0 0 5 3" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+  '<rect width="5" height="3" fill="#000"/>' +
+  '<rect y="1" width="5" height="2" fill="#D00"/>' +
+  '<rect y="2" width="5" height="1" fill="#FFCE00"/>' +
+  '</svg>';
+
+var FLAGS = {en: FLAG_UK, de: FLAG_DE, sk: FLAG_SK};
+var FLAG_CODE = {en: 'EN', de: 'DE', sk: 'SK'};
+var TOGGLE_ARIA = {
+  en: 'Switch to English',
+  de: 'Auf Deutsch umschalten',
+  sk: 'Prepnúť do slovenčiny',
+};
 
 var lang = 'sk';
 var inApp = !!window.ReactNativeWebView;
@@ -125,6 +176,18 @@ function t(key) {
   return (TR[lang] && TR[lang][key]) || key;
 }
 
+/* ---- Privacy-friendly, cookieless event tracking (no-op if not enabled) ---- */
+function track(event) {
+  try {
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({path: 'event-' + event, title: event, event: true});
+    }
+    if (typeof window.plausible === 'function') {
+      window.plausible(event);
+    }
+  } catch (e) {}
+}
+
 function translate(next) {
   lang = next;
   document.documentElement.lang = next;
@@ -133,20 +196,28 @@ function translate(next) {
   } catch (e) {}
   document.querySelectorAll('[data-i18n]').forEach(function (el) {
     var k = el.getAttribute('data-i18n');
-    if (TR[next][k] != null) {
+    if (TR[next] && TR[next][k] != null) {
       el.textContent = TR[next][k];
     }
   });
-  // Toggle shows the flag + code of the language you switch TO
+  // Toggle shows the flag + code of the NEXT language in the cycle
+  var upcoming = NEXT_LANG[next];
   var tg = $('langToggle');
   if (tg) {
-    tg.innerHTML =
-      next === 'sk' ? FLAG_UK + '<span>EN</span>' : FLAG_SK + '<span>SK</span>';
-    tg.setAttribute(
-      'aria-label',
-      next === 'sk' ? 'Switch to English' : 'Prepnúť do slovenčiny',
-    );
+    tg.innerHTML = FLAGS[upcoming] + '<span>' + FLAG_CODE[upcoming] + '</span>';
+    tg.setAttribute('aria-label', TOGGLE_ARIA[upcoming]);
   }
+}
+
+function detectLang() {
+  try {
+    var saved = localStorage.getItem('jbj_lang');
+    if (saved && TR[saved]) return saved;
+  } catch (e) {}
+  var nav = (navigator.language || navigator.userLanguage || 'sk').toLowerCase();
+  if (nav.indexOf('sk') === 0 || nav.indexOf('cs') === 0) return 'sk';
+  if (nav.indexOf('de') === 0) return 'de';
+  return 'en';
 }
 
 function toast(message) {
@@ -156,13 +227,6 @@ function toast(message) {
   clearTimeout(toast._t);
   toast._t = setTimeout(function () {
     el.classList.remove('show');
-  }, 2000);
-}
-
-function flashSuccess(btn) {
-  btn.classList.add('is-success');
-  setTimeout(function () {
-    btn.classList.remove('is-success');
   }, 2000);
 }
 
@@ -185,12 +249,27 @@ function copyText(text) {
   });
 }
 
-/* ---- Personal / company chooser (email / copy / call / whatsapp) ---- */
-function closeChooser() {
-  $('chooser').classList.remove('show');
+// Open external URL, falling back to same-tab navigation if a popup is blocked.
+function openExternal(url) {
+  var w = window.open(url, '_blank', 'noopener');
+  if (!w) {
+    location.href = url;
+  }
 }
 
-function openChooser(type) {
+/* ---- Personal / company chooser (email / copy / call / whatsapp) ---- */
+var chooserTrigger = null;
+
+function closeChooser() {
+  $('chooser').classList.remove('show');
+  if (chooserTrigger && chooserTrigger.focus) {
+    chooserTrigger.focus();
+  }
+  chooserTrigger = null;
+}
+
+function openChooser(type, trigger) {
+  chooserTrigger = trigger || document.activeElement;
   var titles = {email: 'ch_email', copy: 'ch_copy', call: 'ch_call', whatsapp: 'ch_whatsapp'};
   $('chooserTitle').textContent = t(titles[type]);
   $('optPersonalLabel').textContent = t('personal');
@@ -224,12 +303,14 @@ function doAction(type, personal) {
   } else if (type === 'call') {
     location.href = 'tel:' + (personal ? PROFILE.phonePersonalDial : PROFILE.phoneCompanyDial);
   } else if (type === 'whatsapp') {
-    window.open('https://wa.me/' + (personal ? PROFILE.phonePersonalWa : PROFILE.phoneCompanyWa), '_blank');
+    openExternal('https://wa.me/' + (personal ? PROFILE.phonePersonalWa : PROFILE.phoneCompanyWa));
   }
+  track(type + '-' + (personal ? 'personal' : 'company'));
 }
 
 /* ---- Share ---- */
 function shareCard() {
+  track('share');
   if (navigator.share) {
     navigator
       .share({title: PROFILE.fullName, text: t('role'), url: PUBLIC_CARD_URL})
@@ -241,7 +322,7 @@ function shareCard() {
   }
 }
 
-/* ---- Save contact ---- */
+/* ---- vCard (RFC 2426: escape text values, fold lines at 75 octets) ---- */
 var photoB64 = null;
 function preloadPhoto() {
   try {
@@ -257,18 +338,40 @@ function preloadPhoto() {
         photoB64 = null;
       }
     };
-    img.src = 'portrait-600.jpg';
+    img.src = PHOTO_URL;
   } catch (e) {
     photoB64 = null;
   }
 }
 
+function vEsc(v) {
+  return String(v)
+    .replace(/\\/g, '\\\\')
+    .replace(/\n/g, '\\n')
+    .replace(/,/g, '\\,')
+    .replace(/;/g, '\\;');
+}
+
+// Fold a single logical line to 75-octet physical lines (continuation = CRLF + SPACE).
+function foldLine(line) {
+  if (line.length <= 75) return line;
+  var out = line.substring(0, 75);
+  var rest = line.substring(75);
+  while (rest.length > 74) {
+    out += '\r\n ' + rest.substring(0, 74);
+    rest = rest.substring(74);
+  }
+  out += '\r\n ' + rest;
+  return out;
+}
+
 function buildVCard() {
+  var rev = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
   var lines = [
     'BEGIN:VCARD',
     'VERSION:3.0',
-    'N:' + PROFILE.lastName + ';' + PROFILE.firstName + ';;;',
-    'FN:' + PROFILE.fullName,
+    'N:' + vEsc(PROFILE.lastName) + ';' + vEsc(PROFILE.firstName) + ';;;',
+    'FN:' + vEsc(PROFILE.fullName),
     'TEL;TYPE=CELL:' + PROFILE.phonePersonalDial,
     'TEL;TYPE=WORK:' + PROFILE.phoneCompanyDial,
     'EMAIL;TYPE=HOME:' + PROFILE.emailPersonal,
@@ -276,12 +379,13 @@ function buildVCard() {
     'URL:' + PUBLIC_CARD_URL,
     'X-SOCIALPROFILE;TYPE=linkedin:' + PROFILE.linkedin,
     'X-SOCIALPROFILE;TYPE=facebook:' + PROFILE.facebook,
+    'REV:' + rev,
   ];
   if (photoB64) {
     lines.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64);
   }
   lines.push('END:VCARD');
-  return lines.join('\r\n');
+  return lines.map(foldLine).join('\r\n');
 }
 
 function downloadVCard() {
@@ -299,6 +403,7 @@ function downloadVCard() {
 }
 
 function saveContact() {
+  track('save-contact');
   if (inApp) {
     window.ReactNativeWebView.postMessage(
       JSON.stringify({type: 'saveContact', vcard: buildVCard()}),
@@ -309,39 +414,63 @@ function saveContact() {
   toast(t('t_contact'));
 }
 
+/* ---- Accessibility: trap Tab focus inside the open modal ---- */
+function trapFocus(e) {
+  if (e.key !== 'Tab') return;
+  var modal = $('chooser');
+  if (!modal.classList.contains('show')) return;
+  var f = [$('optPersonal'), $('optCompany'), $('chooserClose')];
+  var first = f[0];
+  var last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   if (inApp) {
     document.body.classList.add('in-app');
   }
+
+  // Make web fonts non-render-blocking: flip the print-media stylesheet to all.
+  var gf = $('gfonts');
+  if (gf) gf.media = 'all';
+
   preloadPhoto();
 
-  // Apply saved language
-  var saved = 'sk';
-  try {
-    saved = localStorage.getItem('jbj_lang') || 'sk';
-  } catch (e) {}
-  translate(saved === 'en' ? 'en' : 'sk');
+  // Language: saved choice or browser auto-detect (SK / DE / EN)
+  translate(detectLang());
 
   $('linkedin').href = PROFILE.linkedin;
   $('facebook').href = PROFILE.facebook;
   $('booking').href = BOOKING_LINK;
 
   $('langToggle').addEventListener('click', function () {
-    translate(lang === 'sk' ? 'en' : 'sk');
+    var next = NEXT_LANG[lang] || 'sk';
+    translate(next);
+    track('lang-' + next);
   });
   $('saveContact').addEventListener('click', saveContact);
+  $('booking').addEventListener('click', function () {
+    track('book');
+  });
   $('email').addEventListener('click', function () {
-    openChooser('email');
+    openChooser('email', this);
   });
   $('copyEmail').addEventListener('click', function () {
-    openChooser('copy');
+    openChooser('copy', this);
   });
   $('call').addEventListener('click', function () {
-    openChooser('call');
+    openChooser('call', this);
   });
   $('whatsapp').addEventListener('click', function () {
     // Only the personal number has WhatsApp -> open it directly (no chooser).
-    window.open('https://wa.me/' + PROFILE.phonePersonalWa, '_blank');
+    track('whatsapp-personal');
+    openExternal('https://wa.me/' + PROFILE.phonePersonalWa);
   });
   $('share').addEventListener('click', shareCard);
   $('chooserClose').addEventListener('click', closeChooser);
@@ -353,6 +482,28 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       closeChooser();
+    } else {
+      trapFocus(e);
     }
   });
+
+  // Deep links / app shortcuts: ?go=book → booking, ?go=save → save contact.
+  try {
+    var go = new URLSearchParams(location.search).get('go');
+    if (go === 'book') {
+      track('shortcut-book');
+      location.href = BOOKING_LINK;
+    } else if (go === 'save') {
+      track('shortcut-save');
+      saveContact();
+    }
+  } catch (e) {}
+
+  // Progressive enhancement: register service worker for instant repeat loads
+  // and offline support (skipped inside the native app WebView).
+  if (!inApp && 'serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
 });

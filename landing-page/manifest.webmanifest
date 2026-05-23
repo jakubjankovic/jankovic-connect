@@ -2,17 +2,33 @@
   "name": "Jakub Benjamin Jankovič",
   "short_name": "JBJ Connect",
   "description": "Osobná digitálna vizitka — Bankovníctvo • Networking • Vzťahy s klientmi",
+  "lang": "sk",
+  "dir": "ltr",
+  "categories": ["business", "productivity"],
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#050403",
   "theme_color": "#050403",
   "icons": [
+    { "src": "favicon-32.png?v=6", "sizes": "32x32", "type": "image/png" },
+    { "src": "apple-touch-icon-180.png?v=6", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png?v=6", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png?v=6", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
     {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "name": "Rezervovať termín",
+      "short_name": "Termín",
+      "description": "Rezervovať stretnutie cez kalendár",
+      "url": "./?go=book"
+    },
+    {
+      "name": "Uložiť kontakt",
+      "short_name": "Kontakt",
+      "description": "Uložiť kontakt do telefónu",
+      "url": "./?go=save"
     }
   ]
 }

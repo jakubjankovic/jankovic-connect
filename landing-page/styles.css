@@ -9,7 +9,7 @@
   --ink-0: #fffaf0; /* strong white */
   --ink-1: #e9e2d0;
   --ink-2: #aaa087;
-  --ink-3: #6c6249;
+  --ink-3: #8a8064; /* lightened for WCAG AA contrast on the dark card */
   --line: rgba(232, 196, 104, 0.36); /* stronger gold borders */
   --line-soft: rgba(245, 239, 224, 0.1);
   --gold-1: #e3bb5d;
@@ -553,4 +553,123 @@ body.in-app .qr-orbit {
   color: #1a140a;
   font-weight: 700;
   flex: 0 0 auto;
+}
+
+/* ---- Accessibility: visible keyboard focus ---- */
+.lang-toggle:focus-visible,
+.action-btn:focus-visible,
+.modal-opt:focus-visible,
+.modal-close:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 3px;
+}
+/* Keep the gold-on-gold CTA ring readable */
+.action-btn.cta:focus-visible {
+  outline-color: var(--champagne);
+  outline-offset: 4px;
+}
+
+/* ---- Respect reduced-motion preference ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .action-btn:hover {
+    transform: none;
+  }
+}
+
+/* ---- Very small phones ---- */
+@media (max-width: 360px) {
+  body {
+    padding: 14px 8px 28px;
+  }
+  .header {
+    padding: 28px 16px 0;
+  }
+  .name {
+    font-size: 27px;
+  }
+  .intro {
+    padding: 14px 18px 0;
+  }
+  .actions {
+    padding: 18px 12px 6px;
+  }
+  .tagline {
+    font-size: 18px;
+  }
+  .footer {
+    font-size: 19px;
+  }
+}
+
+/* ---- Clean print / "Save as PDF" version ---- */
+@media print {
+  html,
+  body {
+    background: #fff;
+  }
+  body {
+    color: #1a140a;
+    padding: 0;
+  }
+  body::before {
+    display: none;
+  }
+  .shell {
+    max-width: 100%;
+    background: #fff;
+    border: 1px solid #d8c79a;
+    box-shadow: none;
+  }
+  .lang-toggle,
+  .action-btn .chev,
+  .share-hidden {
+    display: none !important;
+  }
+  .name,
+  .tagline,
+  .qr-title,
+  .footer,
+  .gold-text {
+    color: #1a140a !important;
+    -webkit-text-fill-color: #1a140a !important;
+    background: none !important;
+  }
+  .role,
+  .location,
+  .intro,
+  .disclaimer {
+    color: #3a3320 !important;
+  }
+  .action-btn {
+    border: 1px solid #c9b884;
+    background: #fff;
+    color: #1a140a;
+    break-inside: avoid;
+  }
+  .action-btn .t1 {
+    color: #1a140a;
+  }
+  .action-btn .ic {
+    background: #f3e6c2;
+    color: #1a140a;
+    border-color: #d8c79a;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .qr-frame {
+    background: #fff;
+    box-shadow: none;
+    border: 1px solid #d8c79a;
+  }
+  .qr-inner {
+    background: #fff;
+  }
 }
