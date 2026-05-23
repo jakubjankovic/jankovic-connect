@@ -133,15 +133,7 @@ body::before {
   stroke: url(#avatarGold);
   stroke-width: 6;
   stroke-linecap: round;
-  stroke-dasharray: 26 74;
-  filter: drop-shadow(0 0 4px rgba(243, 213, 136, 0.85));
-  animation: ring-run 2s linear infinite;
-}
-
-@keyframes ring-run {
-  to {
-    stroke-dashoffset: -100;
-  }
+  filter: drop-shadow(0 0 4px rgba(243, 213, 136, 0.55));
 }
 
 .name {
@@ -344,7 +336,7 @@ body::before {
   background: linear-gradient(90deg, transparent, var(--line) 35%, var(--line) 65%, transparent);
 }
 
-/* ---- QR with travelling gold line + glossy gold frame ---- */
+/* ---- QR with glossy gold frame (static) ---- */
 .qr-card {
   text-align: center;
   padding: 20px 24px 4px;
@@ -355,39 +347,6 @@ body::before {
   width: 200px;
   height: 200px;
   margin: 0 auto;
-}
-
-.qr-track {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-  overflow: visible;
-}
-
-.qr-track rect {
-  fill: none;
-  stroke: url(#trainGold);
-  stroke-width: 20;
-  stroke-linecap: round;
-  stroke-dasharray: 26 74;
-  filter: drop-shadow(0 0 3px rgba(243, 213, 136, 0.85));
-  animation: qr-run 1.4s linear infinite;
-}
-
-@keyframes qr-run {
-  to {
-    stroke-dashoffset: -100;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .qr-track rect,
-  .avatar-ring circle {
-    animation: none;
-  }
 }
 
 .qr-frame {
