@@ -110,7 +110,7 @@ body::before {
   border-radius: 50%;
   border: 3px solid var(--gold-1);
   background-color: #0d0a07;
-  background-image: url('portrait-600.jpg?v=4');
+  background-image: url('portrait-600.jpg?v=5');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
