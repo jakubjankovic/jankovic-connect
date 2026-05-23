@@ -306,7 +306,8 @@ document.addEventListener('DOMContentLoaded', function () {
     openChooser('call');
   });
   $('whatsapp').addEventListener('click', function () {
-    openChooser('whatsapp');
+    // Only the personal number has WhatsApp -> open it directly (no chooser).
+    window.open('https://wa.me/' + PROFILE.phonePersonalWa, '_blank');
   });
   $('share').addEventListener('click', shareCard);
   $('chooserClose').addEventListener('click', closeChooser);
