@@ -23,7 +23,8 @@ var PROFILE = {
 
 var PUBLIC_CARD_URL = 'https://jakubjankovic.github.io/jankovic-connect/';
 var BOOKING_LINK = 'https://calendar.app.google/hirwrfbkkEG6uXE16';
-var PHOTO_URL = 'portrait-600.jpg?v=5';
+var PHOTO_WEBP = 'portrait-600.webp?v=8';
+var PHOTO_JPG = 'portrait-600.jpg?v=8';
 
 // Anonymous, cookieless stats (GoatCounter). Set to '' to disable.
 // Create the free account at goatcounter.com and claim this exact code.
@@ -47,6 +48,7 @@ var TR = {
     share: 'Zdieľať vizitku',
     tagline: 'Spojme sa. Vytvorme hodnotu.',
     qr: 'Oskenujte pre spojenie',
+    qr_alt: 'QR kód na túto digitálnu vizitku',
     disclaimer:
       'Toto je osobná digitálna vizitka. Nejde o oficiálnu stránku banky ani o individuálne finančné poradenstvo.',
     footer: 'Prajem Vám veľa úspechov',
@@ -79,6 +81,7 @@ var TR = {
     share: 'Share card',
     tagline: "Let's connect. Let's create value.",
     qr: 'Scan to connect',
+    qr_alt: 'QR code for this digital business card',
     disclaimer:
       'This is a personal digital business card. It is not an official bank website or individual financial advice.',
     footer: 'Wishing you great success',
@@ -111,6 +114,7 @@ var TR = {
     share: 'Visitenkarte teilen',
     tagline: 'Verbinden wir uns. Schaffen wir Wert.',
     qr: 'Zum Verbinden scannen',
+    qr_alt: 'QR-Code für diese digitale Visitenkarte',
     disclaimer:
       'Dies ist eine persönliche digitale Visitenkarte. Es handelt sich nicht um eine offizielle Bank-Website oder um individuelle Finanzberatung.',
     footer: 'Ich wünsche Ihnen viel Erfolg',
@@ -204,6 +208,11 @@ function translate(next) {
       el.textContent = TR[next][k];
     }
   });
+  // Translate the QR image's alt text (accessibility)
+  var qi = $('qrImg');
+  if (qi && t('qr_alt')) {
+    qi.alt = t('qr_alt');
+  }
   // Toggle shows the flag + code of the NEXT language in the cycle
   var upcoming = NEXT_LANG[next];
   var tg = $('langToggle');
@@ -254,9 +263,16 @@ function copyText(text) {
 }
 
 // Open external URL, falling back to same-tab navigation if a popup is blocked.
+// NOTE: passing 'noopener' in the features string makes window.open return null
+// even on success, which would wrongly trigger the fallback. So we omit it and
+// null the opener manually; fall back to same-tab nav only if truly blocked.
 function openExternal(url) {
-  var w = window.open(url, '_blank', 'noopener');
-  if (!w) {
+  var w = window.open(url, '_blank');
+  if (w) {
+    try {
+      w.opener = null;
+    } catch (e) {}
+  } else {
     location.href = url;
   }
 }
@@ -329,7 +345,7 @@ function shareCard() {
 /* ---- vCard (RFC 2426: escape text values, fold lines at 75 octets) ---- */
 var photoB64 = null;
 function preloadPhoto() {
-  try {
+  function load(src, fallback) {
     var img = new Image();
     img.onload = function () {
       try {
@@ -342,7 +358,14 @@ function preloadPhoto() {
         photoB64 = null;
       }
     };
-    img.src = PHOTO_URL;
+    img.onerror = function () {
+      if (fallback) load(fallback, null);
+    };
+    img.src = src;
+  }
+  // Prefer WebP (smaller, shared with the avatar); fall back to JPEG on old browsers.
+  try {
+    load(PHOTO_WEBP, PHOTO_JPG);
   } catch (e) {
     photoB64 = null;
   }
@@ -392,8 +415,8 @@ function buildVCard() {
   return lines.map(foldLine).join('\r\n');
 }
 
-function downloadVCard() {
-  var blob = new Blob([buildVCard()], {type: 'text/vcard;charset=utf-8'});
+function downloadVCard(vcard) {
+  var blob = new Blob([vcard || buildVCard()], {type: 'text/vcard;charset=utf-8'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
@@ -414,7 +437,29 @@ function saveContact() {
     );
     return;
   }
-  downloadVCard();
+  var vcard = buildVCard();
+  // Best path on mobile — incl. iOS Safari and in-app browsers (WhatsApp/IG/FB)
+  // where a blob <a download> silently fails: open the native share sheet with
+  // the .vcf file so the user can "Save to Contacts/Files".
+  try {
+    if (navigator.canShare) {
+      var file = new File([vcard], 'jakub-benjamin-jankovic.vcf', {type: 'text/vcard'});
+      if (navigator.canShare({files: [file]})) {
+        navigator
+          .share({files: [file], title: PROFILE.fullName})
+          .catch(function (err) {
+            // User cancelled -> do nothing. Real failure -> fall back to download.
+            if (err && err.name !== 'AbortError') {
+              downloadVCard(vcard);
+              toast(t('t_contact'));
+            }
+          });
+        return;
+      }
+    }
+  } catch (e) {}
+  // Fallback: direct file download (desktop, Android Chrome).
+  downloadVCard(vcard);
   toast(t('t_contact'));
 }
 
@@ -472,9 +517,9 @@ document.addEventListener('DOMContentLoaded', function () {
     openChooser('call', this);
   });
   $('whatsapp').addEventListener('click', function () {
-    // Only the personal number has WhatsApp -> open it directly (no chooser).
+    // Native <a href="wa.me…"> navigates on its own (robust in in-app browsers);
+    // only the personal number has WhatsApp. Just record the event.
     track('whatsapp-personal');
-    openExternal('https://wa.me/' + PROFILE.phonePersonalWa);
   });
   $('share').addEventListener('click', shareCard);
   $('chooserClose').addEventListener('click', closeChooser);
@@ -499,7 +544,8 @@ document.addEventListener('DOMContentLoaded', function () {
       location.href = BOOKING_LINK;
     } else if (go === 'save') {
       track('shortcut-save');
-      saveContact();
+      // Give the photo a moment to decode so the vCard includes it.
+      setTimeout(saveContact, 600);
     }
   } catch (e) {}
 

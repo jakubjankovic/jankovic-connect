@@ -45,7 +45,9 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  padding: 26px 16px 40px;
+  /* Respect iOS notch / status bar in installed PWA (viewport-fit=cover) */
+  padding: max(26px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+    max(40px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
   position: relative;
 }
 
@@ -110,7 +112,15 @@ body::before {
   border-radius: 50%;
   border: 3px solid var(--gold-1);
   background-color: #0d0a07;
-  background-image: url('portrait-600.jpg?v=5');
+  background-image: url('portrait-600.jpg?v=8'); /* fallback for old browsers */
+  background-image: -webkit-image-set(
+    url('portrait-600.webp?v=8') type('image/webp'),
+    url('portrait-600.jpg?v=8') type('image/jpeg')
+  );
+  background-image: image-set(
+    url('portrait-600.webp?v=8') type('image/webp'),
+    url('portrait-600.jpg?v=8') type('image/jpeg')
+  );
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

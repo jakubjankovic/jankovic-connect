@@ -4,7 +4,7 @@
  * Cross-origin requests (Google Fonts) pass through to the network.
  * Bump CACHE on each release to drop stale entries.
  */
-var CACHE = 'jbj-connect-v7';
+var CACHE = 'jbj-connect-v8';
 var CORE = ['./', './index.html'];
 
 self.addEventListener('install', function (e) {

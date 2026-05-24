@@ -1,6 +1,7 @@
 {
   "name": "Jakub Benjamin Jankovič",
   "short_name": "JBJ Connect",
+  "id": "/jankovic-connect/",
   "description": "Osobná digitálna vizitka — Bankovníctvo • Networking • Vzťahy s klientmi",
   "lang": "sk",
   "dir": "ltr",
@@ -14,8 +15,8 @@
   "icons": [
     { "src": "favicon-32.png?v=6", "sizes": "32x32", "type": "image/png" },
     { "src": "apple-touch-icon-180.png?v=6", "sizes": "180x180", "type": "image/png" },
-    { "src": "icon-512.png?v=6", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png?v=6", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icon-512.png?v=8", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png?v=8", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
     {
